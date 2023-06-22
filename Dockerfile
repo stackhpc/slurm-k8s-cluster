@@ -80,17 +80,11 @@ RUN set -x \
         /var/lib/slurmd/assoc_usage \
         /var/lib/slurmd/qos_usage \
         /var/lib/slurmd/fed_mgr_state \
+        /etc/slurm/slurmdbd.conf \
     && chown -R slurm:slurm /var/*/slurm* \
     && chown -R slurm:slurm /etc/slurm \
-    && chmod -R 600 /etc/slurm \
+    && chmod 600 /etc/slurm/slurmdbd.conf \
     && /sbin/create-munge-key
-
-#COPY slurm.conf /etc/slurm/slurm.conf
-#COPY slurmdbd.conf /etc/slurm/slurmdbd.conf
-#RUN set -x \
-#    && chown slurm:slurm /etc/slurm/slurmdbd.conf \
-#    && chmod 600 /etc/slurm/slurmdbd.conf
-
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
