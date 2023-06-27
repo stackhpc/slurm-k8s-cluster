@@ -58,21 +58,20 @@ RUN set -x \
     && ./configure --enable-debug --prefix=/usr --sysconfdir=/etc/slurm \
         --with-mysql_config=/usr/bin  --libdir=/usr/lib64 \
     && make install \
-    && install -D -m644 etc/cgroup.conf.example /etc/slurm/cgroup.conf.example \
-    && install -D -m644 etc/slurm.conf.example /etc/slurm/slurm.conf.example \
-    && install -D -m644 etc/slurmdbd.conf.example /etc/slurm/slurmdbd.conf.example \
     && install -D -m644 contribs/slurm_completion_help/slurm_completion.sh /etc/profile.d/slurm_completion.sh \
     && popd \
     && rm -rf slurm \
     && groupadd -r --gid=990 slurm \
-    && useradd -r -g slurm --uid=990 slurm \
-    && mkdir /etc/sysconfig/slurm \
+    && useradd -r -g slurm --uid=990 slurm
+
+RUN mkdir /etc/sysconfig/slurm \
         /var/spool/slurmd \
         /var/run/slurmd \
         /var/run/slurmdbd \
         /var/lib/slurmd \
         /var/log/slurm \
         /data \
+        /etc/slurm \
     && touch /var/lib/slurmd/node_state \
         /var/lib/slurmd/front_end_state \
         /var/lib/slurmd/job_state \
@@ -85,13 +84,7 @@ RUN set -x \
     && chown -R slurm:slurm /var/*/slurm* \
     && /sbin/create-munge-key
 
-COPY slurm.conf /etc/slurm/slurm.conf
-COPY slurmdbd.conf /etc/slurm/slurmdbd.conf
-RUN set -x \
-    && chown slurm:slurm /etc/slurm/slurmdbd.conf \
-    && chmod 600 /etc/slurm/slurmdbd.conf
-
-
+VOLUME /etc/slurm
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 

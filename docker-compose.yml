@@ -14,7 +14,7 @@ services:
       - var_lib_mysql:/var/lib/mysql
 
   slurmdbd:
-    image: slurm-docker-cluster:${IMAGE_TAG:-dbee501}
+    image: slurm-docker-cluster:${IMAGE_TAG:-e41370d}
     build:
       context: .
       args:
@@ -24,53 +24,54 @@ services:
     hostname: slurmdbd
     volumes:
       - etc_munge:/etc/munge
-      - etc_slurm:/etc/slurm
       - var_log_slurm:/var/log/slurm
+      - ./slurm.conf:/etc/slurm/slurm.conf
+      - ./slurmdbd.conf:/etc/slurm/slurmdbd.conf
     expose:
       - "6819"
     depends_on:
       - mysql
 
   slurmctld:
-    image: slurm-docker-cluster:${IMAGE_TAG:-dbee501}
+    image: slurm-docker-cluster:${IMAGE_TAG:-e41370d}
     command: ["slurmctld"]
     container_name: slurmctld
     hostname: slurmctld
     volumes:
       - etc_munge:/etc/munge
-      - etc_slurm:/etc/slurm
       - slurm_jobdir:/data
       - var_log_slurm:/var/log/slurm
+      - ./slurm.conf:/etc/slurm/slurm.conf
     expose:
       - "6817"
     depends_on:
       - "slurmdbd"
 
   c1:
-    image: slurm-docker-cluster:${IMAGE_TAG:-dbee501}
+    image: slurm-docker-cluster:${IMAGE_TAG:-e41370d}
     command: ["slurmd"]
     hostname: c1
     container_name: c1
     volumes:
       - etc_munge:/etc/munge
-      - etc_slurm:/etc/slurm
       - slurm_jobdir:/data
       - var_log_slurm:/var/log/slurm
+      - ./slurm.conf:/etc/slurm/slurm.conf
     expose:
       - "6818"
     depends_on:
       - "slurmctld"
 
   c2:
-    image: slurm-docker-cluster:${IMAGE_TAG:-dbee501}
+    image: slurm-docker-cluster:${IMAGE_TAG:-e41370d}
     command: ["slurmd"]
     hostname: c2
     container_name: c2
     volumes:
       - etc_munge:/etc/munge
-      - etc_slurm:/etc/slurm
       - slurm_jobdir:/data
       - var_log_slurm:/var/log/slurm
+      - ./slurm.conf:/etc/slurm/slurm.conf
     expose:
       - "6818"
     depends_on:
@@ -78,7 +79,6 @@ services:
 
 volumes:
   etc_munge:
-  etc_slurm:
   slurm_jobdir:
   var_lib_mysql:
   var_log_slurm:
