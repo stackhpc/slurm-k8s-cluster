@@ -55,9 +55,9 @@ RUN set -ex \
     && gosu nobody true
 
 RUN set -x \
-    && wget https://download.open-mpi.org/release/hwloc/v2.9/hwloc-2.9.2.tar.gz \
-    && tar -xzvf hwloc-2.9.2.tar.gz \
-    && cd hwloc-2.9.2 \
+    && wget https://download.open-mpi.org/release/hwloc/v2.9/hwloc-2.7.2.tar.gz \
+    && tar -xzvf hwloc-2.7.2.tar.gz \
+    && cd hwloc-2.7.2 \
     && ./configure \
     && make install \
     && cd .. \
@@ -77,7 +77,7 @@ RUN set -x \
 RUN set -x \
     && git clone -b ${SLURM_TAG} --single-branch --depth=1 https://github.com/SchedMD/slurm.git \
     && pushd slurm \
-    && ./configure --enable-debug --prefix=/usr --with-hwloc=/usr/local/include/hwloc --sysconfdir=/etc/slurm \
+    && ./configure --enable-debug --prefix=/usr --sysconfdir=/etc/slurm \
         --with-mysql_config=/usr/bin  --libdir=/usr/lib64 \
     && make install \
     && install -D -m644 contribs/slurm_completion_help/slurm_completion.sh /etc/profile.d/slurm_completion.sh \
