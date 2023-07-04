@@ -55,6 +55,24 @@ RUN set -ex \
     && gosu nobody true
 
 RUN set -x \
+    && wget https://download.open-mpi.org/release/hwloc/v2.9/hwloc-2.9.2.tar.gz \
+    && tar -xzvf hwloc-2.9.2.tar.gz \
+    && cd hwloc-2.9.2 \
+    && ./configure \
+    && make install \
+    && cd .. \
+    && wget https://github.com/libevent/libevent/releases/download/release-2.1.12-stable/libevent-2.1.12-stable.tar.gz \
+    && tar -xzvf libevent-2.1.12-stable.tar.gz \
+    && cd libevent-2.1.12-stable \
+    && ./configure \
+    && make install \
+    && cd .. \
+    && wget https://github.com/openpmix/openpmix/releases/download/v4.1.1/pmix-4.1.1.tar.gz \
+    && tar -xzvf pmix-4.1.1.tar.gz \
+    && cd pmix-4.1.1 \
+    && ./configure \
+    && make all install \
+    && cd .. \
     && git clone -b ${SLURM_TAG} --single-branch --depth=1 https://github.com/SchedMD/slurm.git \
     && pushd slurm \
     && ./configure --enable-debug --prefix=/usr --sysconfdir=/etc/slurm \
