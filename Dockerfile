@@ -72,7 +72,9 @@ RUN set -x \
     && cd pmix-4.1.1 \
     && ./configure \
     && make all install \
-    && cd .. \
+    && cd ..
+
+RUN set -x \
     && git clone -b ${SLURM_TAG} --single-branch --depth=1 https://github.com/SchedMD/slurm.git \
     && pushd slurm \
     && ./configure --enable-debug --prefix=/usr --sysconfdir=/etc/slurm \
