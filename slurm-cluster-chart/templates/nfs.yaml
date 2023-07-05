@@ -43,18 +43,3 @@ spec:
       - name: storage
         persistentVolumeClaim:
           claimName: nfs-server-volume
-#---
-#apiVersion: v1
-#kind: Service
-#metadata:
-#  name: nfs-service
-#spec:
-#  ports:
-#  - name: nfs
-#    port: 2049
-#  - name: mountd
-#    port: 20048
-#  - name: rpcbind
-#    port: 111
-#  selector:
-#    app: nfs-server # must match with the label of NFS pod
