@@ -81,12 +81,10 @@ RUN mkdir /etc/sysconfig/slurm \
         /var/lib/slurmd/assoc_usage \
         /var/lib/slurmd/qos_usage \
         /var/lib/slurmd/fed_mgr_state \
-    && groupadd -r --gid=990 slurm \
-    && useradd -r -g slurm --uid=990 slurm \
+    && useradd -r slurm --uid=990 slurm \
     && chown -R slurm:slurm /var/*/slurm* \
-    && groupadd --gid=1000 rocky \
-    && useradd -g rocky --uid=1000 rocky \
-    && usermod -p '*' rocky
+    && useradd ---uid=1000 rocky \
+    && usermod -p '*' rocky # unlocks account but sets no password
 
 VOLUME /etc/slurm
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh

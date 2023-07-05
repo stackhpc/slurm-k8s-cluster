@@ -2,7 +2,7 @@
 set -euo pipefail
 
 cp /tempmounts/munge.key /etc/munge/munge.key
-chown 998:998 /etc/munge/munge.key
+chown munge:munge /etc/munge/munge.key
 chmod 600 /etc/munge/munge.key
 
 if [ "$1" = "slurmdbd" ]
@@ -72,16 +72,15 @@ fi
 if [ "$1" = "login" ]
 then
     
-    mkdir /home/rocky || true
-    mkdir /home/rocky/.ssh || true
+    mkdir -p /home/rocky/.ssh
     cp tempmounts/authorized_keys /home/rocky/.ssh/authorized_keys
 
     echo "---> Setting permissions for user home directories"
     cd /home
     for DIR in */;
-    do USER=$( echo $DIR | sed "s/.$//" ) && (chown -R $USER:$USER $USER || echo "Failed to take ownership of $USER") \
-     && (chmod 700 /home/$USER/.ssh || echo "Couldn't set permissions for .ssh directory for $USER") \
-     && (chmod 600 /home/$USER/.ssh/authorized_keys || echo "Couldn't set permissions for .ssh/authorized_keys for $USER");
+    do USER_TO_SET=$( echo $DIR | sed "s/.$//" ) && (chown -R $USER_TO_SET:$USER_TO_SET $USER_TO_SET || echo "Failed to take ownership of $USER_TO_SET") \
+     && (chmod 700 /home/$USER_TO_SET/.ssh || echo "Couldn't set permissions for .ssh directory for $USER_TO_SET") \
+     && (chmod 600 /home/$USER_TO_SET/.ssh/authorized_keys || echo "Couldn't set permissions for .ssh/authorized_keys for $USER_TO_SET");
     done
     echo "---> Complete"
     echo "Starting sshd"
