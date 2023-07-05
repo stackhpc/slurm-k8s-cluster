@@ -55,10 +55,11 @@ RUN set -ex \
     && gosu nobody true
 
 RUN set -x \
-    && wget https://download.open-mpi.org/release/hwloc/v2.7/hwloc-2.7.2.tar.gz \
-    && tar -xzvf hwloc-2.7.2.tar.gz \
-    && cd hwloc-2.7.2 \
+    && wget https://download.open-mpi.org/release/hwloc/v2.9/hwloc-2.9.2.tar.gz \
+    && tar -xzvf hwloc-2.9.2.tar.gz \
+    && cd hwloc-2.9.2 \
     && ./configure \
+    && make \
     && make install \
     && cd .. \
     && wget https://github.com/libevent/libevent/releases/download/release-2.1.12-stable/libevent-2.1.12-stable.tar.gz \
