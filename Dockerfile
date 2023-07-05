@@ -84,7 +84,8 @@ RUN mkdir /etc/sysconfig/slurm \
     && useradd -r slurm --uid=990 slurm \
     && chown -R slurm:slurm /var/*/slurm* \
     && useradd -u 1000 rocky \
-    && usermod -p '*' rocky # unlocks account but sets no password
+    && usermod -p '*' rocky 
+    # ^ unlocks account but sets no password
 
 VOLUME /etc/slurm
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
