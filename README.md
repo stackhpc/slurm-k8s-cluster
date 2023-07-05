@@ -24,7 +24,7 @@ The Helm chart will run the following containers:
 * slurmctld
 * slurmd (2 replicas by default)
 
-The compose file will create the following named volumes:
+The Helm chart will create the following named volumes:
 
 * nfs-server-volume ( -> /home          )
 * var_lib_mysql     ( -> /var/lib/mysql )
