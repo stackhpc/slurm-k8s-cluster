@@ -66,6 +66,7 @@ RUN set -x \
     && tar -xzvf libevent-2.1.12-stable.tar.gz \
     && cd libevent-2.1.12-stable \
     && ./configure \
+    && make \
     && make install \
     && cd .. \
     && wget https://github.com/openpmix/openpmix/releases/download/v4.1.1/pmix-4.1.1.tar.gz \
