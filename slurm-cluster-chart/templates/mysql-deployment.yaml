@@ -48,4 +48,3 @@ spec:
         - name: var-lib-mysql
           persistentVolumeClaim:
             claimName: var-lib-mysql
-status: {}

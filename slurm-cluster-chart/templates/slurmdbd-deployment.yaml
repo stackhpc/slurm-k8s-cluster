@@ -57,4 +57,3 @@ spec:
         - name: munge-key-secret
           secret:
             secretName: {{ .Values.secrets.mungeKey }}
-status: {}

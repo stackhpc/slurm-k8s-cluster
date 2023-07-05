@@ -63,4 +63,3 @@ spec:
         - name: authorized-keys
           configMap:
             name: {{ .Values.configmaps.authorizedKeys }}
-status: {}
