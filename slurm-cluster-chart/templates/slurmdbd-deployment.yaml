@@ -24,10 +24,6 @@ spec:
         app.kubernetes.io/component: slurmdbd
         app.kubernetes.io/part-of: slurm-docker-cluster
     spec:
-      securityContext: 
-      #  runAsUser: 990
-      #  runAsGroup: 990
-      #  fsGroup: 990
       containers:
         - args:
             - slurmdbd
@@ -52,14 +48,6 @@ spec:
                 secretKeyRef:
                   name: database-auth-secret
                   key: password
-      #initContainers:
-      #  - name: init-perms-set
-      #    image: busybox
-      #    command: ["sh", "-c", "addgroup --system --gid=990 slurm; adduser --system -G slurm --uid=990 slurm && chown slurm:slurm /etc/slurm/slurmdbd.conf"]
-      #    volumeMounts:
-      #      - mountPath: /etc/slurm/slurmdbd.conf
-      #        name: dbd-config-volume
-      #        subPath: slurmdbd.conf
       hostname: slurmdbd
       restartPolicy: Always
       volumes:

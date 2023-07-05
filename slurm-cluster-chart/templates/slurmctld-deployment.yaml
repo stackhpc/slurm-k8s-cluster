@@ -35,8 +35,6 @@ spec:
           volumeMounts:
             - mountPath: {{ .Values.sharedDirectory.mountPath }}
               name: slurm-jobdir
-            #- mountPath: /var/log/slurm
-            #  name: var-log-slurm
             - mountPath: /etc/slurm/slurm.conf
               name: slurm-config-volume
               subPath: slurm.conf
@@ -50,9 +48,6 @@ spec:
           nfs:
             server: {{ .Values.nfs.server }}
             path: {{ .Values.nfs.path }}
-        #- name: var-log-slurm
-        #  persistentVolumeClaim:
-        #    claimName: var-log-slurm
         - name: slurm-config-volume
           configMap:
             name: {{ .Values.configmaps.slurmConf }}
