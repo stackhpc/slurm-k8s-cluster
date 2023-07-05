@@ -58,7 +58,7 @@ RUN set -x \
     && wget https://download.open-mpi.org/release/hwloc/v2.9/hwloc-2.9.2.tar.gz \
     && tar -xzvf hwloc-2.9.2.tar.gz \
     && cd hwloc-2.9.2 \
-    && ./configure --with-hwloc=/usr/local \
+    && ./configure \
     && make \
     && make install \
     && cd ..
@@ -76,7 +76,7 @@ RUN set -x \
     && wget https://github.com/openpmix/openpmix/releases/download/v4.1.1/pmix-4.1.1.tar.gz \
     && tar -xzvf pmix-4.1.1.tar.gz \
     && cd pmix-4.1.1 \
-    && ./configure  \
+    && ./configure --with-hwloc=/usr/local  \
     && make all install \
     && cd ..
 
