@@ -24,3 +24,4 @@ data:
     StorageType=accounting_storage/mysql
     StorageHost=mysql
     StorageUser=slurm
+    

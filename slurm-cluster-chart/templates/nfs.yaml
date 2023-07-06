@@ -43,3 +43,4 @@ spec:
       - name: storage
         persistentVolumeClaim:
           claimName: nfs-server-volume
+          

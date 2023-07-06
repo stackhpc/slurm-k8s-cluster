@@ -5,3 +5,4 @@ metadata:
 data:
   sshd_config: |
     {{- .Files.Get "files/sshd_config" | nindent 4 -}}
+    
