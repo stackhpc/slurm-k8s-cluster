@@ -30,7 +30,7 @@ spec:
             - containerPort: 6817
           resources: {}
           volumeMounts:
-            - mountPath: {{ .Values.sharedDirectory.mountPath }}
+            - mountPath: {{ .Values.nfs.mountPath }}
               name: slurm-jobdir
             - mountPath: /etc/slurm/slurm.conf
               name: slurm-config-volume
@@ -44,7 +44,7 @@ spec:
         - name: slurm-jobdir
           nfs:
             server: {{ .Values.nfs.server }}
-            path: {{ .Values.nfs.path }}
+            path: {{ .Values.nfs.exportPath }}
         - name: slurm-config-volume
           configMap:
             name: {{ .Values.configmaps.slurmConf }}
