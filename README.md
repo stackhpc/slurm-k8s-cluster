@@ -24,7 +24,7 @@ The Helm chart will run the following containers:
 * slurmctld
 * slurmd (2 replicas by default)
 
-The compose file will create the following named volumes:
+The Helm chart will create the following named volumes:
 
 * nfs-server-volume ( -> /home          )
 * var_lib_mysql     ( -> /var/lib/mysql )
@@ -32,9 +32,15 @@ The compose file will create the following named volumes:
 ## Configuring the Cluster
 
 All config files in `slurm-cluster-chart/files` will be mounted into the container to configure their respective services on startup. The `authorized_keys` file contains authorised public keys for the user `rocky`, add your public key to access the cluster. Note that changes to these files will not all be propagated to existing deployments (see "Reconfiguring the Cluster").
-Additional parameters can be found in the `values.yaml` file, which will be applied on a Helm chart deployment. Note that some of these values, such as `encodedMungeKey` will also not propagate until the cluster is restarted (see Reconfiguring the Cluster).
+Additional parameters can be found in the `values.yaml` file, which will be applied on a Helm chart deployment. Note that some of these values will also not propagate until the cluster is restarted (see "Reconfiguring the Cluster").
 
 ## Deploying the Cluster
+
+On initial deployment ONLY, run
+```console
+./generate-secrets.sh
+```
+This generates a set of secrets. If these need to be regenerated, see "Reconfiguring the Cluster"
 
 After configuring `kubectl` with the appropriate `kubeconfig` file, deploy the cluster using the Helm chart:
 ```console
@@ -99,8 +105,27 @@ echo $SLURM_JOB_ID: $SLURM_JOB_NODELIST
 Note: The mpirun script assumes you are running as user 'rocky'. If you are running as root, you will need to include the --allow-run-as-root argument
 ## Reconfiguring the Cluster
 
+### Changes to config files
+
 To guarantee changes to config files are propagated to the cluster, use
 ```console
 kubectl rollout restart deployment <deployment-names>
 ```
 Generally restarts to `slurmd`, `slurmctld`, `login` and `slurmdbd` will be required
+
+### Changes to secrets
+
+Regenerate secrets by rerunning
+```console
+./generate-secrets.sh
+```
+Some secrets are persisted in volumes, so cycling them requires a full teardown and reboot of the volumes and pods which these volumes are mounted on. Run
+```console
+kubectl delete deployment mysql
+kubectl delete pvc var-lib-mysql
+helm upgrade <deployment-name> slurm-cluster-chart
+```
+and then restart the other dependent deployments to propagate changes:
+```console
+kubectl rollout restart deployment slurmd slurmctld login slurmdbd
+```

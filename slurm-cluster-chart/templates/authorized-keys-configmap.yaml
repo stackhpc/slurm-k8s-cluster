@@ -5,3 +5,4 @@ metadata:
 data:
   authorized_keys: |
     {{- .Files.Get "files/authorized_keys" | nindent 4 -}}
+    

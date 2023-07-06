@@ -5,7 +5,6 @@ metadata:
   labels:
     app.kubernetes.io/name: slurm
     app.kubernetes.io/component: slurmctld
-    app.kubernetes.io/part-of: slurm-docker-cluster
   name: slurmctld
 spec:
   replicas: 1
@@ -13,7 +12,6 @@ spec:
     matchLabels:
       app.kubernetes.io/name: slurm
       app.kubernetes.io/component: slurmctld
-      app.kubernetes.io/part-of: slurm-docker-cluster
   strategy:
     type: Recreate
   template:
@@ -22,7 +20,6 @@ spec:
       labels:
         app.kubernetes.io/name: slurm
         app.kubernetes.io/component: slurmctld
-        app.kubernetes.io/part-of: slurm-docker-cluster
     spec:
       containers:
         - args:
@@ -33,10 +30,8 @@ spec:
             - containerPort: 6817
           resources: {}
           volumeMounts:
-            - mountPath: {{ .Values.sharedDirectory.mountPath }}
+            - mountPath: {{ .Values.nfs.mountPath }}
               name: slurm-jobdir
-            #- mountPath: /var/log/slurm
-            #  name: var-log-slurm
             - mountPath: /etc/slurm/slurm.conf
               name: slurm-config-volume
               subPath: slurm.conf
@@ -49,14 +44,10 @@ spec:
         - name: slurm-jobdir
           nfs:
             server: {{ .Values.nfs.server }}
-            path: {{ .Values.nfs.path }}
-        #- name: var-log-slurm
-        #  persistentVolumeClaim:
-        #    claimName: var-log-slurm
+            path: {{ .Values.nfs.exportPath }}
         - name: slurm-config-volume
           configMap:
             name: {{ .Values.configmaps.slurmConf }}
         - name: munge-key-secret
           secret:
             secretName: {{ .Values.secrets.mungeKey }}
-status: {}

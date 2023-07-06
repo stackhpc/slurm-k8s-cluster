@@ -5,3 +5,4 @@ metadata:
 data:
   slurm.conf: |
     {{- .Files.Get "files/slurm.conf" | nindent 4 -}}
+    
