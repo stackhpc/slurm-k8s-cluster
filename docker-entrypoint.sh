@@ -1,6 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
+cp /tempmounts/munge.key /etc/munge/munge.key
+chown munge:munge /etc/munge/munge.key
+chmod 600 /etc/munge/munge.key
+
 if [ "$1" = "slurmdbd" ]
 then
     echo "---> Starting the MUNGE Authentication service (munged) ..."
@@ -8,6 +12,8 @@ then
 
     echo "---> Starting the Slurm Database Daemon (slurmdbd) ..."
 
+    cp /tempmounts/slurmdbd.conf /etc/slurm/slurmdbd.conf
+    echo "StoragePass=${StoragePass}" >> /etc/slurm/slurmdbd.conf
     chown slurm:slurm /etc/slurm/slurmdbd.conf
     chmod 600 /etc/slurm/slurmdbd.conf
     {
@@ -60,7 +66,30 @@ then
     echo "-- slurmctld is now active ..."
 
     echo "---> Starting the Slurm Node Daemon (slurmd) ..."
-    exec /usr/sbin/slurmd -Dvvv
+    exec /usr/sbin/slurmd -Z -Dvvv
+fi
+
+if [ "$1" = "login" ]
+then
+    
+    mkdir -p /home/rocky/.ssh
+    cp tempmounts/authorized_keys /home/rocky/.ssh/authorized_keys
+
+    echo "---> Setting permissions for user home directories"
+    cd /home
+    for DIR in */;
+    do USER_TO_SET=$( echo $DIR | sed "s/.$//" ) && (chown -R $USER_TO_SET:$USER_TO_SET $USER_TO_SET || echo "Failed to take ownership of $USER_TO_SET") \
+     && (chmod 700 /home/$USER_TO_SET/.ssh || echo "Couldn't set permissions for .ssh directory for $USER_TO_SET") \
+     && (chmod 600 /home/$USER_TO_SET/.ssh/authorized_keys || echo "Couldn't set permissions for .ssh/authorized_keys for $USER_TO_SET");
+    done
+    echo "---> Complete"
+    echo "Starting sshd"
+    ssh-keygen -A
+    /usr/sbin/sshd
+
+    echo "---> Starting the MUNGE Authentication service (munged) ..."
+    gosu munge /usr/sbin/munged -F
+    echo "---> MUNGE Complete"
 fi
 
 exec "$@"

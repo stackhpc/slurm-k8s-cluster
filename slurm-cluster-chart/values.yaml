@@ -1,0 +1,27 @@
+sdcImage: ghcr.io/stackhpc/slurm-docker-cluster:c2a4cfb
+
+replicas:
+  slurmd: 2
+  login: 1
+
+nfs:
+  server: 172.20.37.231
+  exportPath: /exports
+  version: 0.8
+  storage: 10Gi
+  mountPath: /home
+
+sqlImage: mariadb:10.10
+
+databaseStorage: 100Mi
+
+configmaps:
+  authorizedKeys: authorized-keys-configmap
+  slurmConf: slurm-conf-configmap
+  slurmdbdConf: slurmdbd-conf-configmap
+  sshdConfig: sshd-config-configmap
+
+secrets:
+  databaseAuth: database-auth-secret
+  mungeKey: munge-key-secret
+  

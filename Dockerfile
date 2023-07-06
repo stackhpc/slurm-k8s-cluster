@@ -35,6 +35,8 @@ RUN set -ex \
        vim-enhanced \
        http-parser-devel \
        json-c-devel \
+       mpitests-openmpi \
+       openssh-server \
     && yum clean all \
     && rm -rf /var/cache/yum
 
@@ -60,9 +62,7 @@ RUN set -x \
     && make install \
     && install -D -m644 contribs/slurm_completion_help/slurm_completion.sh /etc/profile.d/slurm_completion.sh \
     && popd \
-    && rm -rf slurm \
-    && groupadd -r --gid=990 slurm \
-    && useradd -r -g slurm --uid=990 slurm
+    && rm -rf slurm
 
 RUN mkdir /etc/sysconfig/slurm \
         /var/spool/slurmd \
@@ -81,8 +81,10 @@ RUN mkdir /etc/sysconfig/slurm \
         /var/lib/slurmd/assoc_usage \
         /var/lib/slurmd/qos_usage \
         /var/lib/slurmd/fed_mgr_state \
+    && useradd -r --uid=990 slurm \
     && chown -R slurm:slurm /var/*/slurm* \
-    && /sbin/create-munge-key
+    && useradd -u 1000 rocky \
+    && usermod -p '*' rocky # unlocks account but sets no password
 
 VOLUME /etc/slurm
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh

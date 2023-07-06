@@ -4,7 +4,8 @@ on:
     paths:
       - .github/workflows/build-containers.yml
       - Dockerfile
-    workflow_dispatch:
+      - docker-entrypoint.sh
+  workflow_dispatch: 
 
 jobs:
   build_push_api:
