@@ -35,7 +35,7 @@ RUN set -ex \
        vim-enhanced \
        http-parser-devel \
        json-c-devel \
-    #    mpitests-openmpi \
+       mpitests-openmpi \
        pmix-devel \
        hwloc \
        hwloc-devel \
