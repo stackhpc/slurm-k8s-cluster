@@ -1,11 +1,11 @@
-sdcImage: ghcr.io/stackhpc/slurm-docker-cluster:d3a7241
+sdcImage: ghcr.io/stackhpc/slurm-docker-cluster:0eda3b7
 
 replicas:
   slurmd: 2
   login: 1
 
 nfs:
-  server: 172.21.241.12
+  server: 172.21.241.39
   exportPath: /exports
   version: 0.8
   storage: 10Gi
