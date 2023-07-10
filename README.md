@@ -31,7 +31,7 @@ A named RWM volume mounted to `/home` is also expected, this can be external or 
 
 ## Configuring the Cluster
 
-All config files in `slurm-cluster-chart/files` will be mounted into the container to configure their respective services on startup. The `authorized_keys` file contains authorised public keys for the user `rocky`, add your public key to access the cluster. Note that changes to these files will not all be propagated to existing deployments (see "Reconfiguring the Cluster").
+All config files in `slurm-cluster-chart/files` will be mounted into the container to configure their respective services on startup. Note that changes to these files will not all be propagated to existing deployments (see "Reconfiguring the Cluster").
 Additional parameters can be found in the `values.yaml` file, which will be applied on a Helm chart deployment. Note that some of these values will also not propagate until the cluster is restarted (see "Reconfiguring the Cluster").
 
 ## Deploying the Cluster
@@ -47,6 +47,12 @@ An RWM volume is required, if a named volume exists, set `nfs.claimName` in the 
 /nfs/deploy-nfs.sh
 ```
 and leaving `nfs.claimName` as the provided value
+
+To access the cluster via `ssh`, you will need to make your public keys available. Do this by running
+
+```console
+./publish-keys.sh
+```
 
 After configuring `kubectl` with the appropriate `kubeconfig` file, deploy the cluster using the Helm chart:
 ```console
