@@ -47,7 +47,9 @@ spec:
               name: munge-key-secret
               subPath: munge.key
           securityContext:
-            privileged: true
+            capabilities:
+              add:
+                - SYS_RESOURCE
       restartPolicy: Always
       volumes:
         - name: slurm-jobdir
