@@ -29,7 +29,7 @@ jobs:
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0
-	with:
-	  charts_dir: slurm-cluster-chart/charts
+        with:
+          charts_dir: slurm-cluster-chart/charts
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
