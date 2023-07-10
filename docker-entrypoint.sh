@@ -73,6 +73,8 @@ if [ "$1" = "login" ]
 then
     
     mkdir -p /home/rocky/.ssh
+    chown root:root /home
+    chmod 755 /home
     cp tempmounts/authorized_keys /home/rocky/.ssh/authorized_keys
 
     echo "---> Setting permissions for user home directories"
