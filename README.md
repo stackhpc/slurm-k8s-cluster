@@ -93,7 +93,7 @@ normal*      up 5-00:00:00      2   idle c[1-2]
 
 ## Running MPI Benchmarks
 
-The Intel MPI Benchmarks are included in the containers. These can be run both with mpirun and srun.
+The Intel MPI Benchmarks are included in the containers. These can be run both with mpirun and srun. They can also be run as a containerised workload using apptainer
 Example job scripts:
 * srun:
 ```console
@@ -115,6 +115,17 @@ srun /usr/lib64/openmpi/bin/mpitests-IMB-MPI1 pingpong
 echo $SLURM_JOB_ID: $SLURM_JOB_NODELIST
 /usr/lib64/openmpi/bin/mpirun --prefix /usr/lib64/openmpi mpitests-IMB-MPI1 pingpong
 ```
+* apptainer
+```console
+#!/usr/bin/env bash
+#SBATCH -N2
+#SBATCH --ntasks-per-node=1
+MPI_CONTAINER_TAG="main"
+echo SLURM_JOB_NAME: $SLURM_JOB_NAME
+echo $SLURM_JOB_ID: $SLURM_JOB_NODELIST
+srun singularity exec docker://ghcr.io/stackhpc/mpitests-container:${MPI_CONTAINER_TAG} /usr/lib64/openmpi/bin/mpitests-IMB-MPI1 pingpong
+```
+
 Note: The mpirun script assumes you are running as user 'rocky'. If you are running as root, you will need to include the --allow-run-as-root argument
 ## Reconfiguring the Cluster
 
