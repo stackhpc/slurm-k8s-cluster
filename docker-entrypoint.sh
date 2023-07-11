@@ -10,12 +10,6 @@ chmod 600 /etc/munge/munge.key
 
 if [ "$1" = "slurmdbd" ]
 then
-    echo "---> Set shell resource limits ..."
-    ulimit -l unlimited
-    ulimit -s unlimited
-    ulimit -n 131072
-    ulimit -a
-
     echo "---> Starting the MUNGE Authentication service (munged) ..."
     gosu munge /usr/sbin/munged
 
@@ -62,6 +56,12 @@ fi
 
 if [ "$1" = "slurmd" ]
 then
+    echo "---> Set shell resource limits ..."
+    ulimit -l unlimited
+    ulimit -s unlimited
+    ulimit -n 131072
+    ulimit -a
+
     echo "---> Starting the MUNGE Authentication service (munged) ..."
     gosu munge /usr/sbin/munged
 
