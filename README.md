@@ -27,7 +27,7 @@ The Helm chart will create the following named volumes:
 
 * var_lib_mysql     ( -> /var/lib/mysql )
 
-A named RWM volume mounted to `/home` is also expected, this can be external or can be deployed using the scripts in the `/nfs` directory (See "Deploying the Cluster")
+A named ReadWriteMany (RWX) volume mounted to `/home` is also expected, this can be external or can be deployed using the scripts in the `/nfs` directory (See "Deploying the Cluster")
 
 ## Configuring the Cluster
 
@@ -36,23 +36,31 @@ Additional parameters can be found in the `values.yaml` file, which will be appl
 
 ## Deploying the Cluster
 
+### Generating Cluster Secrets
+
 On initial deployment ONLY, run
 ```console
 ./generate-secrets.sh
 ```
 This generates a set of secrets. If these need to be regenerated, see "Reconfiguring the Cluster"
 
-An RWM volume is required, if a named volume exists, set `nfs.claimName` in the `values.yaml` file to its name. If not, manifests to deploy a Rook NFS volume are provided in the `/nfs` directory. You can deploy this by running
+### Connecting RWX Volume
+
+A ReadWriteMany (RWX) volume is required, if a named volume exists, set `nfs.claimName` in the `values.yaml` file to its name. If not, manifests to deploy a Rook NFS volume are provided in the `/nfs` directory. You can deploy this by running
 ```console
 /nfs/deploy-nfs.sh
 ```
-and leaving `nfs.claimName` as the provided value
+and leaving `nfs.claimName` as the provided value.
 
-To access the cluster via `ssh`, you will need to make your public keys available. Do this by running
+### Supplying Public Keys
+
+To access the cluster via `ssh`, you will need to make your public keys available. All your public keys from localhost can be added by running
 
 ```console
 ./publish-keys.sh
 ```
+
+### Deploying with Helm
 
 After configuring `kubectl` with the appropriate `kubeconfig` file, deploy the cluster using the Helm chart:
 ```console
