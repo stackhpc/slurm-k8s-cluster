@@ -1,15 +1,12 @@
-sdcImage: ghcr.io/stackhpc/slurm-docker-cluster:d3a7241
+sdcImage: ghcr.io/stackhpc/slurm-docker-cluster:8ae19ef
 
 replicas:
   slurmd: 2
   login: 1
 
 nfs:
-  server: 172.21.241.12
-  exportPath: /exports
-  version: 0.8
-  storage: 10Gi
   mountPath: /home
+  claimName: rook-nfs-pv-claim
 
 sqlImage: mariadb:10.10
 

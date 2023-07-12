@@ -49,9 +49,8 @@ spec:
       restartPolicy: Always
       volumes:
         - name: slurm-jobdir
-          nfs:
-            server: {{ .Values.nfs.server }}
-            path: {{ .Values.nfs.exportPath }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.nfs.claimName }}
         - name: slurm-config-volume
           configMap:
             name: {{ .Values.configmaps.slurmConf }}

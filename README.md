@@ -19,22 +19,24 @@ The Helm chart will run the following containers:
 
 * login
 * mysql
-* nfs-server
 * slurmdbd
 * slurmctld
 * slurmd (2 replicas by default)
 
 The Helm chart will create the following named volumes:
 
-* nfs-server-volume ( -> /home          )
 * var_lib_mysql     ( -> /var/lib/mysql )
+
+A named ReadWriteMany (RWX) volume mounted to `/home` is also expected, this can be external or can be deployed using the scripts in the `/nfs` directory (See "Deploying the Cluster")
 
 ## Configuring the Cluster
 
-All config files in `slurm-cluster-chart/files` will be mounted into the container to configure their respective services on startup. The `authorized_keys` file contains authorised public keys for the user `rocky`, add your public key to access the cluster. Note that changes to these files will not all be propagated to existing deployments (see "Reconfiguring the Cluster").
+All config files in `slurm-cluster-chart/files` will be mounted into the container to configure their respective services on startup. Note that changes to these files will not all be propagated to existing deployments (see "Reconfiguring the Cluster").
 Additional parameters can be found in the `values.yaml` file, which will be applied on a Helm chart deployment. Note that some of these values will also not propagate until the cluster is restarted (see "Reconfiguring the Cluster").
 
 ## Deploying the Cluster
+
+### Generating Cluster Secrets
 
 On initial deployment ONLY, run
 ```console
@@ -42,22 +44,33 @@ On initial deployment ONLY, run
 ```
 This generates a set of secrets. If these need to be regenerated, see "Reconfiguring the Cluster"
 
+### Connecting RWX Volume
+
+A ReadWriteMany (RWX) volume is required, if a named volume exists, set `nfs.claimName` in the `values.yaml` file to its name. If not, manifests to deploy a Rook NFS volume are provided in the `/nfs` directory. You can deploy this by running
+```console
+/nfs/deploy-nfs.sh
+```
+and leaving `nfs.claimName` as the provided value.
+
+### Supplying Public Keys
+
+To access the cluster via `ssh`, you will need to make your public keys available. All your public keys from localhost can be added by running
+
+```console
+./publish-keys.sh
+```
+
+### Deploying with Helm
+
 After configuring `kubectl` with the appropriate `kubeconfig` file, deploy the cluster using the Helm chart:
 ```console
 helm install <deployment-name> slurm-cluster-chart
 ```
+Subsequent releases can be deployed using:
 
-The cluster will not automatically be configured with the correct IP address for the NFS server. To configure this, run
-```console
-kubectl get pod -l app=nfs-server -o jsonpath="{.items[0].status.podIP}"
-```
-to retrieve the pod IP of the NFS server and replace the `nfs.server` value in the `values.yaml` file with this new IP. You can then redeploy the cluster using
 ```console
 helm upgrade <deployment-name> slurm-cluster-chart
 ```
-Use this command for subsequent deployments of the cluster
-
-Note: when redeploying the cluster with the correct NFS IP, you may need to use `kubectl delete pod --force` on the existing `slurmctld`, `slurmd` and `login` pods
 
 ## Accessing the Cluster
 

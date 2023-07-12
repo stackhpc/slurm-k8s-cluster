@@ -1,4 +1,4 @@
 PasswordAuthentication no
 ChallengeResponseAuthentication no
-ClientAliveInterval 600
-ClientAliveCountMax 1
+ClientAliveInterval 40
+ClientAliveCountMax 14

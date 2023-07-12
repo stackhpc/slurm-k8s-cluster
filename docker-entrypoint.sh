@@ -1,6 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
+chown root:root /home
+chmod 755 /home
+
 cp /tempmounts/munge.key /etc/munge/munge.key
 chown munge:munge /etc/munge/munge.key
 chmod 600 /etc/munge/munge.key
