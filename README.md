@@ -93,7 +93,8 @@ normal*      up 5-00:00:00      2   idle c[1-2]
 
 ## Running MPI Benchmarks
 
-The Intel MPI Benchmarks are included in the containers. These can be run both with mpirun and srun. They can also be run as a containerised workload using apptainer
+The Intel MPI Benchmarks are included in the containers. These can be run both with mpirun and srun. They can also be run as a containerised workload using apptainer.
+
 Example job scripts:
 * srun:
 ```console
