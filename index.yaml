@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  slurm-cluster-chart:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2023-07-12T10:18:18.749468509Z"
+    description: A Helm chart for Kubernetes
+    digest: 261f3ff2fd15d8c73352275f144c2c24cc8464a0695ceee0052f7c8510a88dec
+    name: slurm-cluster-chart
+    type: application
+    urls:
+    - https://github.com/stackhpc/slurm-docker-cluster/releases/download/slurm-cluster-chart-0.1.0/slurm-cluster-chart-0.1.0.tgz
+    version: 0.1.0
+generated: "2023-07-12T10:18:18.749475809Z"
