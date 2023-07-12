@@ -59,11 +59,11 @@ then
     ulimit -n 131072
     ulimit -a
 
-    setcap cap_sys_resource,cap_chown,cap_dac_override,cap_fowner,cap_kill,cap_fsetid,cap_setgid,cap_setuid,cap_setpcap,cap_net_bind_service,cap_net_raw,cap_sys_chroot,cap_mknod,cap_audit_write,cap_audit_control,cap_setfcap+ep /usr/sbin/slurmstepd
-    setcap cap_chown,cap_dac_override,cap_fowner,cap_fsetid,cap_kill,cap_setgid,cap_setuid,cap_setpcap,cap_net_bind_service,cap_net_raw,cap_sys_chroot,cap_mknod,cap_audit_write,cap_setfcap=ep /usr/bin/apptainer
-    setcap cap_chown,cap_dac_override,cap_fowner,cap_fsetid,cap_kill,cap_setgid,cap_setuid,cap_setpcap,cap_net_bind_service,cap_net_raw,cap_sys_chroot,cap_mknod,cap_audit_write,cap_setfcap=ep /usr/bin/run-singularity
-    setcap cap_chown,cap_dac_override,cap_fowner,cap_fsetid,cap_kill,cap_setgid,cap_setuid,cap_setpcap,cap_net_bind_service,cap_net_raw,cap_sys_chroot,cap_sys_resource,cap_mknod,cap_audit_write,cap_audit_control,cap_setfcap=ep /usr/libexec/apptainer/bin/starter
-    setcap cap_chown,cap_dac_override,cap_fowner,cap_fsetid,cap_kill,cap_setgid,cap_setuid,cap_setpcap,cap_net_bind_service,cap_net_raw,cap_sys_chroot,cap_sys_resource,cap_mknod,cap_audit_write,cap_audit_control,cap_setfcap=ep /usr/libexec/apptainer/bin/squashfuse_ll
+    #setcap cap_sys_resource,cap_chown,cap_dac_override,cap_fowner,cap_kill,cap_fsetid,cap_setgid,cap_setuid,cap_setpcap,cap_net_bind_service,cap_net_raw,cap_sys_chroot,cap_mknod,cap_audit_write,cap_audit_control,cap_setfcap+ep /usr/sbin/slurmstepd
+    #setcap cap_chown,cap_dac_override,cap_fowner,cap_fsetid,cap_kill,cap_setgid,cap_setuid,cap_setpcap,cap_net_bind_service,cap_net_raw,cap_sys_chroot,cap_mknod,cap_audit_write,cap_setfcap=ep /usr/bin/apptainer
+    #setcap cap_chown,cap_dac_override,cap_fowner,cap_fsetid,cap_kill,cap_setgid,cap_setuid,cap_setpcap,cap_net_bind_service,cap_net_raw,cap_sys_chroot,cap_mknod,cap_audit_write,cap_setfcap=ep /usr/bin/run-singularity
+    #setcap cap_chown,cap_dac_override,cap_fowner,cap_fsetid,cap_kill,cap_setgid,cap_setuid,cap_setpcap,cap_net_bind_service,cap_net_raw,cap_sys_chroot,cap_sys_resource,cap_mknod,cap_audit_write,cap_audit_control,cap_setfcap=ep /usr/libexec/apptainer/bin/starter
+    #setcap cap_chown,cap_dac_override,cap_fowner,cap_fsetid,cap_kill,cap_setgid,cap_setuid,cap_setpcap,cap_net_bind_service,cap_net_raw,cap_sys_chroot,cap_sys_resource,cap_mknod,cap_audit_write,cap_audit_control,cap_setfcap=ep /usr/libexec/apptainer/bin/squashfuse_ll
 
     echo "---> Starting the MUNGE Authentication service (munged) ..."
     gosu munge /usr/sbin/munged
