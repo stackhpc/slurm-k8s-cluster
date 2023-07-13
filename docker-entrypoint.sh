@@ -104,4 +104,22 @@ then
     echo "---> MUNGE Complete"
 fi
 
+if [ "$1" = "check-queue-hook" ]
+then
+    echo "---> Starting the MUNGE Authentication service (munged) ..."
+    gosu munge /usr/sbin/munged
+    echo "---> MUNGE Complete"
+
+    RUNNING_JOBS=$(squeue -t pd,r,cg -h -r | wc -l)
+
+    if [[ $RUNNING_JOBS -eq 0 ]]
+    then
+            echo "No Slurm jobs in queue, can safely upgrade"
+            exit 0
+    else
+            echo "Error: cannot upgrade chart - there are still Slurm jobs in the queue"
+            exit 1
+    fi
+fi
+
 exec "$@"
