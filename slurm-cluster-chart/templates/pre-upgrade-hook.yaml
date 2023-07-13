@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: check-jobs-finished-hook
+  name: pre-upgrade-hook
   annotations:
     "helm.sh/hook": pre-upgrade
     "helm.sh/hook-delete-policy": hook-succeeded
@@ -10,14 +10,14 @@ spec:
   ttlSecondsAfterFinished: 0
   template:
     metadata:
-      name: check-jobs-finished-hook
+      name: pre-upgrade-hook
     spec:
       restartPolicy: Never
       containers:
-      - name: check-jobs-finished-hook
+      - name: pre-upgrade-hook
         image: {{ .Values.sdcImage }}
         args:
-          - check-queue-hook
+          - pre-upgrade-hook
         volumeMounts:
           - mountPath: /tempmounts/munge.key
             name: munge-key-secret
