@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: check-jobs-finished-hook
+  annotations:
+    "helm.sh/hook": pre-upgrade
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  backoffLimit: 0
+  ttlSecondsAfterFinished: 0
+  template:
+    metadata:
+      name: check-jobs-finished-hook
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: check-jobs-finished-hook
+        image: {{ .Values.sdcImage }}
+        args:
+          - check-queue-hook
+        volumeMounts:
+          - mountPath: /tempmounts/munge.key
+            name: munge-key-secret
+            subPath: munge.key
+          - mountPath: /etc/slurm/slurm.conf
+            name: slurm-config-volume
+            subPath: slurm.conf
+      volumes:
+        - name: munge-key-secret
+          secret:
+            secretName: {{ .Values.secrets.mungeKey }}
+        - name: slurm-config-volume
+          configMap:
+            name: {{ .Values.configmaps.slurmConf }}
+      
