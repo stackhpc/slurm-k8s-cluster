@@ -105,6 +105,7 @@ then
 
     echo "---> Starting Apache Server"
     /usr/libexec/httpd-ssl-gencerts
+    /opt/ood/ood-portal-generator/sbin/update_ood_portal
     /usr/sbin/httpd -k start -X -e debug
 fi
 
