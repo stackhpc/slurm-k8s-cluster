@@ -15,6 +15,8 @@ RUN set -ex \
     && yum -y install dnf-plugins-core epel-release \
     && yum -y install dnf-plugins-core \
     && yum config-manager --set-enabled powertools \
+    && yum -y module enable ruby:2.7 nodejs:14 \
+    && yum -y install https://yum.osc.edu/ondemand/2.0/ondemand-release-web-2.0-1.noarch.rpm \
     && yum -y install \
        wget \
        bzip2 \
@@ -42,6 +44,7 @@ RUN set -ex \
        hwloc-devel \
        openssh-server \
        apptainer \
+       ondemand \
     && yum clean all \
     && rm -rf /var/cache/yum
 

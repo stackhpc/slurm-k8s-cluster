@@ -100,8 +100,12 @@ then
     /usr/sbin/sshd
 
     echo "---> Starting the MUNGE Authentication service (munged) ..."
-    gosu munge /usr/sbin/munged -F
+    gosu munge /usr/sbin/munged
     echo "---> MUNGE Complete"
+
+    echo "---> Starting Apache Server"
+    /usr/libexec/httpd-ssl-gencerts
+    /usr/sbin/httpd -k start -X -e debug
 fi
 
 if [ "$1" = "check-queue-hook" ]
