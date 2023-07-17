@@ -107,6 +107,7 @@ then
     /usr/libexec/httpd-ssl-gencerts
     /opt/ood/ood-portal-generator/sbin/update_ood_portal
     mkdir --parents /opt/rh/httpd24/root/etc/httpd/
+    mkdir --parents /etc/ood/config/apps/shell
     /usr/bin/htdbm -cb /opt/rh/httpd24/root/etc/httpd/.htpasswd.dbm rocky password
     /usr/sbin/httpd -k start -X -e debug
 fi
