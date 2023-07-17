@@ -36,17 +36,17 @@ spec:
             - mountPath: /tempmounts/munge.key
               name: munge-key-secret
               subPath: munge.key
-            - mountPath: /var/lib/slurmd
-              name: var-lib-slurmd
+            - mountPath: /var/spool/slurmctld
+              name: slurmctld-state
       hostname: slurmctld
       restartPolicy: Always
       volumes:
         - name: slurm-jobdir
           persistentVolumeClaim:
             claimName: {{ .Values.nfs.claimName }}
-        - name: var-lib-slurmd
+        - name: slurmctld-state
           persistentVolumeClaim:
-            claimName: var-lib-slurmd
+            claimName: var-spool-slurmctld
         - name: slurm-config-volume
           configMap:
             name: {{ .Values.configmaps.slurmConf }}
