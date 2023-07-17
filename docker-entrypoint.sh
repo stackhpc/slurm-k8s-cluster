@@ -143,7 +143,7 @@ then
     for VAR in ${NODE_LIST[@]}
     do
     NODE_DATA=( $(scontrol show node $VAR | grep NodeAddr) )
-    ${NODE_ADDR[0]} #NodeAddr=...
+    ${NODE_DATA[0]} #NodeAddr=...
 
     CURRENT_NODE_ADDR=$(cat /home/slurm/nodes/$VAR)
 
