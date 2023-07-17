@@ -110,7 +110,7 @@ then
     gosu munge /usr/sbin/munged
     echo "---> MUNGE Complete"
 
-    RUNNING_JOBS=$(squeue --states=RUNNING,COMPLETING,CONFIGURING,RESIZING,SIGNALING,STAGE_OUT,STOPPED,SUSPENDED --no-header --array | wc --lines)
+    RUNNING_JOBS=$(squeue --states=RUNNING,COMPLETING,CONFIGURING,RESIZING,SIGNALING,STAGE_OUT,STOPPED,SUSPENDED --noheader --array | wc --lines)
 
     if [[ $RUNNING_JOBS -eq 0 ]]
     then
