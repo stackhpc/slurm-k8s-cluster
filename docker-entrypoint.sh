@@ -47,7 +47,7 @@ then
     echo "-- slurmdbd is now active ..."
 
     echo "---> Setting permissions for state directory ..."
-    chown slurm:slurm /var/lib/slurmd
+    chown slurm:slurm /var/spool/slurmctld
 
     echo "---> Starting the Slurm Controller Daemon (slurmctld) ..."
     if /usr/sbin/slurmctld -V | grep -q '17.02' ; then
@@ -110,7 +110,7 @@ then
     gosu munge /usr/sbin/munged
     echo "---> MUNGE Complete"
 
-    RUNNING_JOBS=$(squeue -t pd,r,cg -h -r | wc -l)
+    RUNNING_JOBS=$(squeue --states=RUNNING,COMPLETING,CONFIGURING,RESIZING,SIGNALING,STAGE_OUT,STOPPED,SUSPENDED --no-header --array | wc --lines)
 
     if [[ $RUNNING_JOBS -eq 0 ]]
     then
