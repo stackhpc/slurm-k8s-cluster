@@ -28,6 +28,7 @@ spec:
           name: login
           ports:
             - containerPort: 22
+            - containerPort: 80
           volumeMounts:
             - mountPath: {{ .Values.nfs.mountPath }}
               name: slurm-jobdir
@@ -43,6 +44,12 @@ spec:
             - name: authorized-keys
               mountPath: /tempmounts/authorized_keys
               subPath: authorized_keys
+            - name: ood-portal
+              mountPath: /etc/ood/config/ood_portal.yml
+              subPath: ood_portal.yml
+            - name: httpd-config
+              mountPath: /etc/httpd/conf/httpd.conf
+              subPath: httpd.conf
           resources: {}
       hostname: login
       restartPolicy: Always
@@ -62,3 +69,9 @@ spec:
         - name: authorized-keys
           configMap:
             name: {{ .Values.configmaps.authorizedKeys }}
+        - name: ood-portal
+          configMap:
+            name: ood-portal-configmap
+        - name: httpd-config
+          configMap:
+            name: httpd-configmap

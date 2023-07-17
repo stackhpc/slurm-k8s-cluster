@@ -11,6 +11,10 @@ spec:
     - name: "ssh"
       port: 22
       targetPort: 22
+    - name: "apache"
+      port: 80
+      targetPort: 80
+      protocol: TCP
   type: LoadBalancer
   selector:
     app.kubernetes.io/name: slurm

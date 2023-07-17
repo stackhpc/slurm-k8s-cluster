@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ood-portal-configmap
+data:
+  ood_portal.yml: |
+    {{- .Files.Get "files/ood_portal.yaml" | nindent 4 -}}
+    
