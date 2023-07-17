@@ -49,6 +49,10 @@ then
     echo "---> Setting permissions for state directory ..."
     chown slurm:slurm /var/spool/slurmctld
 
+    echo "---> Setting up active nodes directory"
+    mkdir -p /home/slurm/nodes
+    chown slurm:slurm /home/slurm
+
     echo "---> Starting the Slurm Controller Daemon (slurmctld) ..."
     if /usr/sbin/slurmctld -V | grep -q '17.02' ; then
         exec gosu slurm /usr/sbin/slurmctld -Dvvv
@@ -76,6 +80,12 @@ then
         sleep 2
     done
     echo "-- slurmctld is now active ..."
+
+    echo "---> Writing IP to nodes directory"
+    MY_IP_DATA=$( cat /etc/hosts | grep $(hostname) )
+    MY_IP_DATA=( $MY_IP_DATA )
+    touch /home/slurm/nodes/$( hostname )
+    $MY_IP_DATA > /home/slurm/nodes/$( hostname )
 
     echo "---> Starting the Slurm Node Daemon (slurmd) ..."
     exec /usr/sbin/slurmd -Z -Dvvv
