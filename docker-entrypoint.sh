@@ -85,7 +85,7 @@ then
     MY_IP_DATA=$( cat /etc/hosts | grep $(hostname) )
     MY_IP_DATA=( $MY_IP_DATA )
     touch /home/slurm/nodes/$( hostname )
-    ${MY_IP_DATA[0]} > /home/slurm/nodes/$( hostname )
+    echo ${MY_IP_DATA[0]} > /home/slurm/nodes/$( hostname )
 
     echo "---> Starting the Slurm Node Daemon (slurmd) ..."
     exec /usr/sbin/slurmd -Z -Dvvv
