@@ -48,7 +48,7 @@ This generates a set of secrets. If these need to be regenerated, see "Reconfigu
 
 A ReadWriteMany (RWX) volume is required, if a named volume exists, set `nfs.claimName` in the `values.yaml` file to its name. If not, manifests to deploy a Rook NFS volume are provided in the `/nfs` directory. You can deploy this by running
 ```console
-/nfs/deploy-nfs.sh
+./nfs/deploy-nfs.sh
 ```
 and leaving `nfs.claimName` as the provided value.
 
