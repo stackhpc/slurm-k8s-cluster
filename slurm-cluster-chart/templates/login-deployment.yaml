@@ -50,6 +50,9 @@ spec:
             - name: httpd-config
               mountPath: /etc/httpd/conf/httpd.conf
               subPath: httpd.conf
+            - name: cluster-config
+              mountPath: /etc/ood/config/cluster.d/ood-cluster-config.yml
+              subPath: ood-cluster-config.yml
           resources: {}
       hostname: login
       restartPolicy: Always
@@ -69,6 +72,9 @@ spec:
         - name: authorized-keys
           configMap:
             name: {{ .Values.configmaps.authorizedKeys }}
+        - name: cluster-config
+          configMap:
+            name: cluster-config
         - name: ood-portal
           configMap:
             name: ood-portal-configmap

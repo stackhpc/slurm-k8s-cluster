@@ -13,7 +13,7 @@
 # Example:
 #     servername: 'www.example.com'
 # Default: null (don't use name-based Virtual Host)
-servername: 128.232.226.84
+#servername: 128.232.226.84
 #serverAlias: 128.232.226.84
 
 # The port specification for the Virtual Host

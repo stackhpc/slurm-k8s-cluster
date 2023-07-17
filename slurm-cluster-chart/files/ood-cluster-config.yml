@@ -1,0 +1,6 @@
+v2:
+  metadata:
+    title: "My Cluster"
+  login:
+    #host: www.example.com
+    host: 128.232.226.84
