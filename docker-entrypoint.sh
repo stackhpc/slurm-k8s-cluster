@@ -106,8 +106,10 @@ then
     echo "---> Starting Apache Server"
     /usr/libexec/httpd-ssl-gencerts
     /opt/ood/ood-portal-generator/sbin/update_ood_portal
+    mkdir --parents /opt/rh/httpd24/root/etc/httpd/
     groupadd ood
     useradd -d /home/ood -g ood -k /etc/skel -m ood
+    /usr/bin/htpasswd -cb /opt/rh/httpd24/root/etc/httpd/.htpasswd.dbm ood password
     /usr/sbin/httpd -k start -X -e debug
 fi
 
