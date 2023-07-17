@@ -82,8 +82,7 @@ then
     echo "-- slurmctld is now active ..."
 
     echo "---> Writing IP to nodes directory"
-    MY_IP_DATA=$( cat /etc/hosts | grep $(hostname) )
-    MY_IP_DATA=( $MY_IP_DATA )
+    MY_IP_DATA=( $( cat /etc/hosts | grep $(hostname) ) )
     touch /home/slurm/nodes/$( hostname )
     echo ${MY_IP_DATA[0]} > /home/slurm/nodes/$( hostname )
 
@@ -130,6 +129,30 @@ then
             echo "Error: cannot upgrade chart - there are still Slurm jobs in the queue"
             exit 1
     fi
+fi
+
+if [ "$1" = "update-nodes-hook" ]
+then
+    NODE_LIST=( $(sinfo --format=%n --noheader) )
+
+    for VAR in ${NODE_LIST[@]}
+    do
+    NODE_DATA=( $(scontrol show node $VAR | grep NodeAddr) )
+    ${NODE_ADDR[0]} #NodeAddr=...
+
+    CURRENT_NODE_ADDR=$(cat /home/slurm/nodes/$VAR)
+
+    if [ "$NodeAddr" = "$CURRENT_NODE_ADDR" ]; then
+        echo "Addresses match"
+    else
+        echo "Address mismatch: "
+        echo "OLD: $NodeAddr"
+        echo "NEW: $CURRENT_NODE_ADDR"
+        scontrol update NodeName="$VAR" State=DOWN Reason="Updating node IP"
+        scontrol update NodeName="$VAR" NodeAddr=$CURRENT_NODE_ADDR
+        scontrol update NodeName="$VAR" State=RESUME
+    fi
+    done
 fi
 
 exec "$@"
