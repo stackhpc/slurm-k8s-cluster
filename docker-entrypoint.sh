@@ -133,6 +133,11 @@ fi
 
 if [ "$1" = "update-nodes-hook" ]
 then
+    
+    echo "---> Starting the MUNGE Authentication service (munged) ..."
+    gosu munge /usr/sbin/munged
+    echo "---> MUNGE Complete"
+    
     NODE_LIST=( $(sinfo --format=%n --noheader) )
 
     for VAR in ${NODE_LIST[@]}
