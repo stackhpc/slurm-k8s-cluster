@@ -38,7 +38,9 @@ spec:
               subPath: munge.key
             - mountPath: /var/spool/slurmctld
               name: slurmctld-state
-      # hostname: slurmctld
+      dnsConfig:
+        searches:
+          - slurmd.default.svc.cluster.local
       restartPolicy: Always
       volumes:
         - name: slurm-jobdir
