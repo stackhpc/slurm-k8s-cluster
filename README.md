@@ -69,7 +69,7 @@ helm install <deployment-name> slurm-cluster-chart
 Subsequent releases can be deployed using:
 
 ```console
-helm upgrade <deployment-name> slurm-cluster-chart
+helm upgrade <deployment-name> slurm-cluster-chart --wait
 ```
 
 ## Accessing the Cluster

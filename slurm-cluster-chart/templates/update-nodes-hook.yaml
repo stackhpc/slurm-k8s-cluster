@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: update-nodes-hook
+  annotations:
+    "helm.sh/hook": post-upgrade
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  backoffLimit: 0
+  #ttlSecondsAfterFinished: 0
+  template:
+    metadata:
+      name: update-nodes-hook
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: update-nodes-hook
+        image: {{ .Values.sdcImage }}
+        args:
+          - update-nodes-hook
+        volumeMounts:
+          - mountPath: /tempmounts/munge.key
+            name: munge-key-secret
+            subPath: munge.key
+          - mountPath: /etc/slurm/slurm.conf
+            name: slurm-config-volume
+            subPath: slurm.conf
+          - mountPath: {{ .Values.nfs.mountPath }}
+            name: slurm-jobdir
+      volumes:
+        - name: munge-key-secret
+          secret:
+            secretName: {{ .Values.secrets.mungeKey }}
+        - name: slurm-config-volume
+          configMap:
+            name: {{ .Values.configmaps.slurmConf }}
+        - name: slurm-jobdir
+          persistentVolumeClaim:
+            claimName: {{ .Values.nfs.claimName }}
