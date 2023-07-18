@@ -142,22 +142,23 @@ then
 
     for VAR in ${NODE_LIST[@]}
     do
-    NODE_DATA=( $(scontrol show node $VAR | grep NodeAddr) )
-    export ${NODE_DATA[0]} #NodeAddr=...
+        NODE_DATA=( $(scontrol show node $VAR | grep NodeAddr) )
+        export ${NODE_DATA[0]} #NodeAddr=...
 
-    CURRENT_NODE_ADDR=$(cat /home/slurm/nodes/$VAR)
+        CURRENT_NODE_ADDR=$(cat /home/slurm/nodes/$VAR)
 
-    if [ "$NodeAddr" = "$CURRENT_NODE_ADDR" ]; then
-        echo "Addresses match"
-    else
-        echo "Address mismatch: "
-        echo "OLD: $NodeAddr"
-        echo "NEW: $CURRENT_NODE_ADDR"
-        scontrol update NodeName="$VAR" State=DOWN Reason="Updating node IP"
-        scontrol update NodeName="$VAR" NodeAddr=$CURRENT_NODE_ADDR
-        scontrol update NodeName="$VAR" State=RESUME
-    fi
+        if [ "$NodeAddr" = "$CURRENT_NODE_ADDR" ]; then
+            echo "Addresses match"
+        else
+            echo "Address mismatch: "
+            echo "OLD: $NodeAddr"
+            echo "NEW: $CURRENT_NODE_ADDR"
+            scontrol update NodeName="$VAR" State=DOWN Reason="Updating node IP"
+            scontrol update NodeName="$VAR" NodeAddr=$CURRENT_NODE_ADDR
+            scontrol update NodeName="$VAR" State=RESUME
+        fi
     done
+    exit 0
 fi
 
 exec "$@"
