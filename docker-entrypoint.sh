@@ -112,7 +112,7 @@ then
     /opt/ood/ood-portal-generator/sbin/update_ood_portal
     mkdir --parents /opt/rh/httpd24/root/etc/httpd/
 
-    /usr/bin/htdbm -cb /opt/rh/httpd24/root/etc/httpd/.htpasswd.dbm rocky password
+    /usr/bin/htdbm -cb /opt/rh/httpd24/root/etc/httpd/.htpasswd.dbm rocky $ROCKY_OOD_PASS
     /usr/sbin/httpd -k start -X -e debug
 fi
 
