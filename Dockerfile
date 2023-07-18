@@ -17,6 +17,7 @@ RUN set -ex \
     && yum config-manager --set-enabled powertools \
     && yum -y module enable ruby:2.7 nodejs:14 \
     && yum -y install https://yum.osc.edu/ondemand/2.0/ondemand-release-web-2.0-1.noarch.rpm \
+    && yum -y module install ruby nodejs \
     && yum -y install \
        wget \
        bzip2 \
