@@ -1,8 +1,9 @@
+---
 v2:
   metadata:
     title: "My Cluster"
   login:
-    host: "localhost"
+    host: "login"
   job:
     cluster: "linux"
     adapter: "slurm"
