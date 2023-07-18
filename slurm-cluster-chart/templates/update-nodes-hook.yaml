@@ -7,7 +7,7 @@ metadata:
     "helm.sh/hook-delete-policy": hook-succeeded
 spec:
   backoffLimit: 0
-  #ttlSecondsAfterFinished: 0
+  ttlSecondsAfterFinished: 0
   template:
     metadata:
       name: update-nodes-hook
