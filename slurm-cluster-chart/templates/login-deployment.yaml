@@ -26,6 +26,12 @@ spec:
             - login
           image: {{ .Values.sdcImage }}
           name: login
+          env:
+            - name: ROCKY_OOD_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: htdbm-secret
+                  key: password
           ports:
             - containerPort: 22
             - containerPort: 80
