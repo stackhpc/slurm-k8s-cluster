@@ -2,5 +2,9 @@ v2:
   metadata:
     title: "My Cluster"
   login:
-    #host: www.example.com
-    host: 128.232.226.84
+    host: "localhost"
+  job:
+    cluster: "linux"
+    adapter: "slurm"
+    bin: "/usr/sbin"
+    conf: "/etc/slurm/slurm.conf"
