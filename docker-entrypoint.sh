@@ -96,7 +96,6 @@ then
     done
     echo "---> Complete"
     echo "Starting sshd"
-    ssh-keygen -A
     /usr/sbin/sshd
 
     echo "---> Starting the MUNGE Authentication service (munged) ..."
