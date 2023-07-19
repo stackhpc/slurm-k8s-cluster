@@ -59,6 +59,9 @@ spec:
             - name: cluster-config
               mountPath: /etc/ood/config/clusters.d/ood-cluster-config.yml
               subPath: ood-cluster-config.yml
+            - name: shell-app
+              mountPath: /var/www/ood/apps/sys/shell/app.js
+              subPath: app.js
             - name: host-keys
               mountPath: /tempmounts/etc/ssh
           resources: {}
@@ -92,3 +95,6 @@ spec:
         - name: host-keys
           secret:
             secretName: host-keys-secret
+        - name: shell-app
+          configMap:
+            name: shell-app-configmap
