@@ -3,7 +3,7 @@ v2:
   metadata:
     title: "Slurm Cluster"
   login:
-    host: "login"
+    host: "localhost"
   job:
     cluster: "linux"
     adapter: "slurm"

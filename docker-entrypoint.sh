@@ -103,6 +103,10 @@ then
     gosu munge /usr/sbin/munged
     echo "---> MUNGE Complete"
 
+    echo "---> Setting up self ssh capabilities for OOD"
+    ssh-keyscan localhost > /etc/ssh/ssh_known_hosts
+    cat /home/rocky/.ssh/id_rsa.pub >> /home/rocky/.ssh/known_hosts
+
     echo "---> Starting Apache Server"
 
     mkdir --parents /etc/ood/config/apps/shell
