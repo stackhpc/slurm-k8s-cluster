@@ -105,6 +105,7 @@ then
 
     echo "---> Setting up self ssh capabilities for OOD"
     ssh-keyscan localhost > /etc/ssh/ssh_known_hosts
+    echo "" >> /home/rocky/.ssh/authorized_keys #Adding newline to avoid breaking authorized_keys file
     cat /home/rocky/.ssh/id_rsa.pub >> /home/rocky/.ssh/authorized_keys
 
     echo "---> Starting Apache Server"
