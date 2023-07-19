@@ -35,6 +35,7 @@ spec:
           ports:
             - containerPort: 22
             - containerPort: 80
+            - containerPort: 443
           volumeMounts:
             - mountPath: {{ .Values.nfs.mountPath }}
               name: slurm-jobdir

@@ -29,6 +29,9 @@
 #       - 'SSLCertificateKeyFile "/etc/pki/tls/private/www.example.com.key"'
 # Default: null (no SSL support)
 #ssl: null
+ssl:
+- 'SSLCertificateFile "/etc/pki/tls/certs/localhost.crt"'
+- 'SSLCertificateKeyFile "/etc/pki/tls/private/localhost.key"'
 
 # Root directory of log files (can be relative ServerRoot)
 # Example:
