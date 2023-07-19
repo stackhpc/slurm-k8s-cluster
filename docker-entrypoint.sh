@@ -96,6 +96,11 @@ then
     done
     echo "---> Complete"
     echo "Starting sshd"
+    cp /tempmounts/etc/ssh/* /etc/ssh/
+    chmod 600 /etc/ssh/ssh_host_dsa_key
+    chmod 600 /etc/ssh/ssh_host_ecdsa_key
+    chmod 600 /etc/ssh/ssh_host_ed25519_key
+    chmod 600 /etc/ssh/ssh_host_rsa_key
     /usr/sbin/sshd
 
     echo "---> Starting the MUNGE Authentication service (munged) ..."
