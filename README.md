@@ -44,6 +44,8 @@ On initial deployment ONLY, run
 ```
 This generates a set of secrets. If these need to be regenerated, see "Reconfiguring the Cluster"
 
+Be sure to take note of the Open Ondemand credentials, you will need them to access the cluster through a browser
+
 ### Connecting RWX Volume
 
 A ReadWriteMany (RWX) volume is required, if a named volume exists, set `nfs.claimName` in the `values.yaml` file to its name. If not, manifests to deploy a Rook NFS volume are provided in the `/nfs` directory. You can deploy this by running
