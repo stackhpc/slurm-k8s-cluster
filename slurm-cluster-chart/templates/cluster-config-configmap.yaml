@@ -3,5 +3,5 @@ kind: ConfigMap
 metadata:
   name: cluster-config
 data:
-  httpd.conf: |
-    {{- .Files.Get "files/ood-cluster-config.yaml" | nindent 4 -}}
+  ood-cluster-config.yml: |
+    {{- .Files.Get "files/ood-cluster-config.yml" | nindent 4 -}}
