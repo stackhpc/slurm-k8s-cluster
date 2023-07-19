@@ -61,35 +61,6 @@ spec:
               subPath: ood-cluster-config.yml
             - name: host-keys
               mountPath: /tempmounts/etc/ssh
-            #Host keys
-            # - name: host-keys
-            #   mountPath: /etc/ssh/ssh_host_dsa_key
-            #   subPath: ssh_host_dsa_key
-            #   readOnly: true
-            # - name: host-keys
-            #   mountPath: /etc/ssh/ssh_host_dsa_key.pub
-            #   subPath: ssh_host_dsa_key.pub
-            # - name: host-keys
-            #   mountPath: /etc/ssh/ssh_host_ecdsa_key
-            #   subPath: ssh_host_ecdsa_key
-            #   readOnly: true
-            # - name: host-keys
-            #   mountPath: /etc/ssh/ssh_host_ecdsa_key.pub
-            #   subPath: ssh_host_ecdsa_key.pub
-            # - name: host-keys
-            #   mountPath: /etc/ssh/ssh_host_ed25519_key
-            #   subPath: ssh_host_ed25519_key
-            #   readOnly: true
-            # - name: host-keys
-            #   mountPath: /etc/ssh/ssh_host_ed25519_key.pub
-            #   subPath: ssh_host_ed25519_key.pub
-            # - name: host-keys
-            #   mountPath: /etc/ssh/ssh_host_rsa_key
-            #   subPath: ssh_host_rsa_key
-            #   readOnly: true
-            # - name: host-keys
-            #   mountPath: /etc/ssh/ssh_host_rsa_key.pub
-            #   subPath: ssh_host_rsa_key.pub
           resources: {}
       hostname: login
       restartPolicy: Always
