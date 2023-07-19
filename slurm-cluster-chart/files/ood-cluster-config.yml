@@ -1,11 +1,11 @@
 ---
 v2:
   metadata:
-    title: "My Cluster"
+    title: "Slurm Cluster"
   login:
     host: "login"
   job:
     cluster: "linux"
     adapter: "slurm"
-    bin: "/usr/sbin"
+    bin: "/usr/bin"
     conf: "/etc/slurm/slurm.conf"
