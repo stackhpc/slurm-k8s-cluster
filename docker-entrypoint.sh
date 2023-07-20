@@ -114,10 +114,8 @@ then
 
     if [[ $RUNNING_JOBS -eq 0 ]]
     then
-            echo "No Slurm jobs in queue, can safely upgrade"
             exit 0
     else
-            echo "Error: cannot upgrade chart - there are still Slurm jobs in the queue"
             exit 1
     fi
 fi
