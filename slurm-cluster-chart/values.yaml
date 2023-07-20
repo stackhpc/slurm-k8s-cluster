@@ -1,4 +1,4 @@
-sdcImage: ghcr.io/stackhpc/slurm-docker-cluster:b09c6c2 #OLD CONTAINER NEEDS REBUILD
+sdcImage: ghcr.io/stackhpc/slurm-docker-cluster:c12d04e
 
 replicas:
   slurmd: 2
