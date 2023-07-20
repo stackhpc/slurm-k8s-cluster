@@ -84,8 +84,15 @@ fi
 if [ "$1" = "login" ]
 then
     
+    echo "---> Setting up ssh for user"
     mkdir -p /home/rocky/.ssh
     cp tempmounts/authorized_keys /home/rocky/.ssh/authorized_keys
+
+    if [ -f /home/rocky/.ssh/id_rsa.pub ]; then
+        echo "ssh keys already found"
+    else
+            ssh-keygen -t rsa -f /home/rocky/.ssh/id_rsa -N ""
+    fi
 
     echo "---> Setting permissions for user home directories"
     cd /home
