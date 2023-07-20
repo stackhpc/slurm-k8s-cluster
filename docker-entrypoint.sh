@@ -78,7 +78,7 @@ then
     echo "-- slurmctld is now active ..."
 
     echo "---> Starting the Slurm Node Daemon (slurmd) ..."
-    exec /usr/sbin/slurmd -F -Dvvv
+    exec /usr/sbin/slurmd -Z -Dvvv
 fi
 
 if [ "$1" = "login" ]
