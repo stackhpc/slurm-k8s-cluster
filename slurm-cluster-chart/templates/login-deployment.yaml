@@ -64,6 +64,9 @@ spec:
               mountPath: /tempmounts/etc/ssh
           resources: {}
       hostname: login
+      dnsConfig:
+        searches:
+          - slurmd.default.svc.cluster.local
       restartPolicy: Always
       volumes:
         - name: slurm-jobdir

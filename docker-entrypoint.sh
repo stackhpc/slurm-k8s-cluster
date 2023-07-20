@@ -47,7 +47,7 @@ then
     echo "-- slurmdbd is now active ..."
 
     echo "---> Setting permissions for state directory ..."
-    chown slurm:slurm /var/lib/slurmd
+    chown slurm:slurm /var/spool/slurmctld
 
     echo "---> Starting the Slurm Controller Daemon (slurmctld) ..."
     if /usr/sbin/slurmctld -V | grep -q '17.02' ; then
@@ -78,7 +78,7 @@ then
     echo "-- slurmctld is now active ..."
 
     echo "---> Starting the Slurm Node Daemon (slurmd) ..."
-    exec /usr/sbin/slurmd -Z -Dvvv
+    exec /usr/sbin/slurmd -F -Dvvv
 fi
 
 if [ "$1" = "login" ]
@@ -138,14 +138,12 @@ then
     gosu munge /usr/sbin/munged
     echo "---> MUNGE Complete"
 
-    RUNNING_JOBS=$(squeue -t pd,r,cg -h -r | wc -l)
+    RUNNING_JOBS=$(squeue --states=RUNNING,COMPLETING,CONFIGURING,RESIZING,SIGNALING,STAGE_OUT,STOPPED,SUSPENDED --noheader --array | wc --lines)
 
     if [[ $RUNNING_JOBS -eq 0 ]]
     then
-            echo "No Slurm jobs in queue, can safely upgrade"
             exit 0
     else
-            echo "Error: cannot upgrade chart - there are still Slurm jobs in the queue"
             exit 1
     fi
 fi
