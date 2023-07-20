@@ -46,6 +46,9 @@ then
     done
     echo "-- slurmdbd is now active ..."
 
+    echo "---> Setting permissions for state directory ..."
+    chown slurm:slurm /var/spool/slurmctld
+
     echo "---> Starting the Slurm Controller Daemon (slurmctld) ..."
     if /usr/sbin/slurmctld -V | grep -q '17.02' ; then
         exec gosu slurm /usr/sbin/slurmctld -Dvvv
@@ -67,7 +70,7 @@ then
 
     echo "---> Waiting for slurmctld to become active before starting slurmd..."
 
-    until 2>/dev/null >/dev/tcp/slurmctld/6817
+    until 2>/dev/null >/dev/tcp/slurmctld-0/6817
     do
         echo "-- slurmctld is not available.  Sleeping ..."
         sleep 2
@@ -99,6 +102,22 @@ then
     echo "---> Starting the MUNGE Authentication service (munged) ..."
     gosu munge /usr/sbin/munged -F
     echo "---> MUNGE Complete"
+fi
+
+if [ "$1" = "check-queue-hook" ]
+then
+    echo "---> Starting the MUNGE Authentication service (munged) ..."
+    gosu munge /usr/sbin/munged
+    echo "---> MUNGE Complete"
+
+    RUNNING_JOBS=$(squeue --states=RUNNING,COMPLETING,CONFIGURING,RESIZING,SIGNALING,STAGE_OUT,STOPPED,SUSPENDED --noheader --array | wc --lines)
+
+    if [[ $RUNNING_JOBS -eq 0 ]]
+    then
+            exit 0
+    else
+            exit 1
+    fi
 fi
 
 exec "$@"
