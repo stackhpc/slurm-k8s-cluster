@@ -1,4 +1,4 @@
-sdcImage: ghcr.io/stackhpc/slurm-docker-cluster:0f286ed #CHANGE AFTER REBUILD
+sdcImage: ghcr.io/stackhpc/slurm-docker-cluster:3daa29f
 
 replicas:
   slurmd: 2
