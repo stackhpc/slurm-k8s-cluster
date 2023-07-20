@@ -1,4 +1,4 @@
-sdcImage: ghcr.io/stackhpc/slurm-docker-cluster:009ecee
+sdcImage: ghcr.io/stackhpc/slurm-docker-cluster:c12d04e
 
 replicas:
   slurmd: 2
