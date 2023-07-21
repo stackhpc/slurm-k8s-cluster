@@ -10,7 +10,7 @@ spec:
   - ReadWriteMany
   resources:
     requests:
-      storage: 1Gi
+      storage: 5Gi
 ---
 apiVersion: nfs.rook.io/v1alpha1
 kind: NFSServer

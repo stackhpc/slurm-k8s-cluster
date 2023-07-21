@@ -9,3 +9,8 @@ v2:
     adapter: "slurm"
     bin: "/usr/bin"
     conf: "/etc/slurm/slurm.conf"
+  batch_connect:
+    basic:
+      script_wrapper: |
+        %s
+        
