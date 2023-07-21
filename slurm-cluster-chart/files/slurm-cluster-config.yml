@@ -1,0 +1,21 @@
+---
+v2:
+  metadata:
+    title: "slurm-cluster"
+  login:
+    host: "localhost"
+  bc_queue: all
+  job:
+    cluster: "linux"
+    adapter: "slurm"
+    bin: "/usr/bin"
+    conf: "/etc/slurm/slurm.conf"
+  batch_connect:
+    template: "basic"
+  script:
+    native:
+      - "-N"
+      - "<%= bc_num_slots.blank? ? 1 : bc_num_slots.to_i %>"
+      - "-C"
+      - "c12"
+        

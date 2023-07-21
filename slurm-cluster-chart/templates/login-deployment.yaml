@@ -58,8 +58,8 @@ spec:
               mountPath: /etc/httpd/conf/httpd.conf
               subPath: httpd.conf
             - name: cluster-config
-              mountPath: /etc/ood/config/clusters.d/ood-cluster-config.yml
-              subPath: ood-cluster-config.yml
+              mountPath: /etc/ood/config/clusters.d/slurm-cluster.yml
+              subPath: slurm-cluster.yml
             - name: host-keys
               mountPath: /tempmounts/etc/ssh
           resources: {}
