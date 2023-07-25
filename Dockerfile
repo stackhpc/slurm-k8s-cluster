@@ -92,6 +92,7 @@ RUN mkdir /etc/sysconfig/slurm \
     && usermod -p '*' rocky # unlocks account but sets no password
 
 VOLUME /etc/slurm
+COPY --chown=slurm:slurm k8s-slurmd-* /usr/sbin/
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
