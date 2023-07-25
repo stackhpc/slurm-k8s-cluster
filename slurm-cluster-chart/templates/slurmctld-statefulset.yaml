@@ -33,7 +33,7 @@ spec:
             - mountPath: /etc/slurm/slurm.conf
               name: slurm-config-volume
               subPath: slurm.conf
-            - mountPath: /tempmounts/munge.key
+            - mountPath: /tmp/munge.key
               name: munge-key-secret
               subPath: munge.key
             - mountPath: /var/spool/slurmctld

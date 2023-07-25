@@ -4,7 +4,7 @@ set -euo pipefail
 function start_munge(){
 
     echo "--> Copying MUNGE key ..."
-    cp /tempmounts/munge.key /etc/munge/munge.key
+    cp /tmp/munge.key /etc/munge/munge.key
     chown munge:munge /etc/munge/munge.key
 
     echo "---> Starting the MUNGE Authentication service (munged) ..."
@@ -16,7 +16,7 @@ then
 
     echo "---> Starting the Slurm Database Daemon (slurmdbd) ..."
 
-    cp /tempmounts/slurmdbd.conf /etc/slurm/slurmdbd.conf
+    cp /tmp/slurmdbd.conf /etc/slurm/slurmdbd.conf
     echo "StoragePass=${StoragePass}" >> /etc/slurm/slurmdbd.conf
     chown slurm:slurm /etc/slurm/slurmdbd.conf
     chmod 600 /etc/slurm/slurmdbd.conf
@@ -85,7 +85,7 @@ if [ "$1" = "login" ]
 then
     
     mkdir -p /home/rocky/.ssh
-    cp tempmounts/authorized_keys /home/rocky/.ssh/authorized_keys
+    cp /tmp/authorized_keys /home/rocky/.ssh/authorized_keys
 
     echo "---> Setting permissions for user home directories"
     cd /home

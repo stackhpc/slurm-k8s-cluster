@@ -42,7 +42,7 @@ spec:
               subPath: slurm.conf
             - mountPath: {{ .Values.nfs.mountPath }}
               name: slurm-jobdir
-            - mountPath: /tempmounts/munge.key
+            - mountPath: /tmp/munge.key
               name: munge-key-secret
               subPath: munge.key
           securityContext:
