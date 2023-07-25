@@ -42,6 +42,9 @@ spec:
               name: kubectl-secret
               subPath: kubectl
               readOnly: true
+            - mountPath: /etc/slurm/slurmd-pod-template.yml
+              name: slurmd-pod-template
+              subPath: podTemplate
       dnsConfig:
         searches:
           - slurmd.default.svc.cluster.local
@@ -64,3 +67,6 @@ spec:
           secret:
             secretName: kubectl-secret
             defaultMode: 0400
+        - name: slurmd-pod-template
+          configMap:
+            name: slurmd-pod-template
