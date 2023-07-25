@@ -90,14 +90,16 @@ then
     cp /tmp/authorized_keys /home/rocky/.ssh/authorized_keys
 
     echo "---> Setting permissions for user home directories"
-    cd /home
-    for DIR in */;
-    do USER_TO_SET=$( echo $DIR | sed "s/.$//" ) && (chown -R $USER_TO_SET:$USER_TO_SET $USER_TO_SET || echo "Failed to take ownership of $USER_TO_SET") \
-     && (chmod 700 /home/$USER_TO_SET/.ssh || echo "Couldn't set permissions for .ssh directory for $USER_TO_SET") \
-     && (chmod 600 /home/$USER_TO_SET/.ssh/authorized_keys || echo "Couldn't set permissions for .ssh/authorized_keys for $USER_TO_SET");
+    pushd /home > /dev/null
+    for DIR in *
+        do
+        chown -R $DIR:$DIR $DIR || echo "Failed to change ownership of $DIR"
+        chmod 700 $DIR/.ssh || echo "Couldn't set permissions for .ssh/ directory of $DIR"
+        chmod 600 $DIR/.ssh/authorized_keys || echo "Couldn't set permissions for .ssh/authorized_keys for $USER_TO_SET"
     done
-    echo "---> Complete"
-    echo "Starting sshd"
+    popd > /dev/null
+
+    echo "---> Starting sshd"
     ssh-keygen -A
     /usr/sbin/sshd
 
