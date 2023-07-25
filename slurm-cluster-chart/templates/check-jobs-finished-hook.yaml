@@ -29,6 +29,7 @@ spec:
         - name: munge-key-secret
           secret:
             secretName: {{ .Values.secrets.mungeKey }}
+            defaultMode: 0400
         - name: slurm-config-volume
           configMap:
             name: {{ .Values.configmaps.slurmConf }}
