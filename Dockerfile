@@ -93,8 +93,7 @@ RUN mkdir /etc/sysconfig/slurm \
 
 VOLUME /etc/slurm
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-COPY k8s-slurmd-create /usr/local/bin/k8s-slurmd-create
-COPY k8s-slurmd-delete /usr/local/bin/k8s-slurmd-delete
+COPY --chown=slurm:slurm k8s-slurmd-* /usr/local/bin/
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
 CMD ["slurmdbd"]

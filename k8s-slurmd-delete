@@ -1,0 +1,11 @@
+#!/usr/bin/bash
+
+export KUBECONFIG=/etc/slurm/kubectl
+
+echo "$(date) Suspend invoked $0 $*" >> /var/log/power_save.log
+
+hosts=$(scontrol show hostnames $1) # this is purely a textual expansion, doens't depend on defined nodes
+for host in $hosts
+do
+   kubectl delete pod $host
+done
