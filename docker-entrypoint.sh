@@ -6,7 +6,6 @@ function start_munge(){
     echo "--> Copying MUNGE key ..."
     cp /tempmounts/munge.key /etc/munge/munge.key
     chown munge:munge /etc/munge/munge.key
-    chmod 600 /etc/munge/munge.key
 
     echo "---> Starting the MUNGE Authentication service (munged) ..."
     gosu munge /usr/sbin/munged "$@"

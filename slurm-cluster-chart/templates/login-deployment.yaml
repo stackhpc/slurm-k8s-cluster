@@ -62,6 +62,7 @@ spec:
         - name: munge-key-secret
           secret:
             secretName: {{ .Values.secrets.mungeKey }}
+            defaultMode: 0400
         - name: authorized-keys
           configMap:
             name: {{ .Values.configmaps.authorizedKeys }}
