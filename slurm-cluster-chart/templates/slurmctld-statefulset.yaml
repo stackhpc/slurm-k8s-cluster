@@ -38,6 +38,10 @@ spec:
               subPath: munge.key
             - mountPath: /var/spool/slurmctld
               name: slurmctld-state
+            - mountPath: /etc/slurm/kubectl
+              name: kubectl-secret
+              subPath: kubectl
+              readOnly: true
       dnsConfig:
         searches:
           - slurmd.default.svc.cluster.local
@@ -55,3 +59,7 @@ spec:
         - name: munge-key-secret
           secret:
             secretName: {{ .Values.secrets.mungeKey }}
+        - name: kubectl-secret
+          secret:
+            secretName: kubectl-secret
+            defaultMode: 0400
