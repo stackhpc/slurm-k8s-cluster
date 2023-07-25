@@ -3,7 +3,7 @@ set -euo pipefail
 
 function start_munge(){
 
-    echo "--> Copying MUNGE key ..."
+    echo "---> Copying MUNGE key ..."
     cp /tmp/munge.key /etc/munge/munge.key
     chown munge:munge /etc/munge/munge.key
 
@@ -13,6 +13,8 @@ function start_munge(){
 
 if [ "$1" = "slurmdbd" ]
 then
+
+    start_munge
 
     echo "---> Starting the Slurm Database Daemon (slurmdbd) ..."
 
