@@ -1,17 +1,19 @@
 #!/bin/bash
 set -euo pipefail
 
-chown root:root /home
-chmod 755 /home
+function start_munge(){
 
-cp /tempmounts/munge.key /etc/munge/munge.key
-chown munge:munge /etc/munge/munge.key
-chmod 600 /etc/munge/munge.key
+    echo "--> Copying MUNGE key ..."
+    cp /tempmounts/munge.key /etc/munge/munge.key
+    chown munge:munge /etc/munge/munge.key
+    chmod 600 /etc/munge/munge.key
+
+    echo "---> Starting the MUNGE Authentication service (munged) ..."
+    gosu munge /usr/sbin/munged "$@"
+}
 
 if [ "$1" = "slurmdbd" ]
 then
-    echo "---> Starting the MUNGE Authentication service (munged) ..."
-    gosu munge /usr/sbin/munged
 
     echo "---> Starting the Slurm Database Daemon (slurmdbd) ..."
 
@@ -34,8 +36,8 @@ fi
 
 if [ "$1" = "slurmctld" ]
 then
-    echo "---> Starting the MUNGE Authentication service (munged) ..."
-    gosu munge /usr/sbin/munged
+
+    start_munge
 
     echo "---> Waiting for slurmdbd to become active before starting slurmctld ..."
 
@@ -65,8 +67,7 @@ then
     ulimit -n 131072
     ulimit -a
 
-    echo "---> Starting the MUNGE Authentication service (munged) ..."
-    gosu munge /usr/sbin/munged
+    start_munge
 
     echo "---> Waiting for slurmctld to become active before starting slurmd..."
 
@@ -99,16 +100,12 @@ then
     ssh-keygen -A
     /usr/sbin/sshd
 
-    echo "---> Starting the MUNGE Authentication service (munged) ..."
-    gosu munge /usr/sbin/munged -F
-    echo "---> MUNGE Complete"
+    start_munge --foreground
 fi
 
 if [ "$1" = "check-queue-hook" ]
 then
-    echo "---> Starting the MUNGE Authentication service (munged) ..."
-    gosu munge /usr/sbin/munged
-    echo "---> MUNGE Complete"
+    start_munge
 
     RUNNING_JOBS=$(squeue --states=RUNNING,COMPLETING,CONFIGURING,RESIZING,SIGNALING,STAGE_OUT,STOPPED,SUSPENDED --noheader --array | wc --lines)
 
