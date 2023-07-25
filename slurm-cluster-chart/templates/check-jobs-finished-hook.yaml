@@ -15,7 +15,7 @@ spec:
       restartPolicy: Never
       containers:
       - name: check-jobs-finished-hook
-        image: {{ .Values.sdcImage }}
+        image: {{ .Values.slurmImage }}
         args:
           - check-queue-hook
         volumeMounts:

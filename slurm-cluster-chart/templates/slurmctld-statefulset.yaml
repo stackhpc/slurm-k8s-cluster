@@ -22,7 +22,7 @@ spec:
       containers:
         - args:
             - slurmctld
-          image: {{ .Values.sdcImage }}
+          image: {{ .Values.slurmImage }}
           name: slurmctld
           ports:
             - containerPort: 6817

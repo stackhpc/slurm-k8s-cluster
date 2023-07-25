@@ -24,7 +24,7 @@ spec:
       containers:
         - args:
             - login
-          image: {{ .Values.sdcImage }}
+          image: {{ .Values.slurmImage }}
           name: login
           ports:
             - containerPort: 22
