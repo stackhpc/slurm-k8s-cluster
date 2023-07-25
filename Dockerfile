@@ -91,6 +91,9 @@ RUN mkdir /etc/sysconfig/slurm \
     && useradd -u 1000 rocky \
     && usermod -p '*' rocky # unlocks account but sets no password
 
+COPY kubernetes.repo /etc/yum.repos.d/kubernetes.repo
+RUN dnf install -y kubectl
+
 VOLUME /etc/slurm
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 COPY --chown=slurm:slurm --chmod=744 k8s-slurmd-* /usr/local/bin/

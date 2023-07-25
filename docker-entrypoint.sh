@@ -38,17 +38,6 @@ fi
 if [ "$1" = "slurmctld" ]
 then
 
-    echo "---> Installing kubectl ..."
-    cat <<-EOF > /etc/yum.repos.d/kubernetes.repo
-	[kubernetes]
-	name=Kubernetes
-	baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
-	enabled=1
-	gpgcheck=1
-	gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-	EOF
-    dnf install -y kubectl
-
     start_munge
 
     echo "---> Waiting for slurmdbd to become active before starting slurmctld ..."
