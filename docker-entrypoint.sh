@@ -1,21 +1,24 @@
 #!/bin/bash
 set -euo pipefail
 
-chown root:root /home
-chmod 755 /home
+function start_munge(){
 
-cp /tempmounts/munge.key /etc/munge/munge.key
-chown munge:munge /etc/munge/munge.key
-chmod 600 /etc/munge/munge.key
+    echo "---> Copying MUNGE key ..."
+    cp /tmp/munge.key /etc/munge/munge.key
+    chown munge:munge /etc/munge/munge.key
+
+    echo "---> Starting the MUNGE Authentication service (munged) ..."
+    gosu munge /usr/sbin/munged "$@"
+}
 
 if [ "$1" = "slurmdbd" ]
 then
-    echo "---> Starting the MUNGE Authentication service (munged) ..."
-    gosu munge /usr/sbin/munged
+
+    start_munge
 
     echo "---> Starting the Slurm Database Daemon (slurmdbd) ..."
 
-    cp /tempmounts/slurmdbd.conf /etc/slurm/slurmdbd.conf
+    cp /tmp/slurmdbd.conf /etc/slurm/slurmdbd.conf
     echo "StoragePass=${StoragePass}" >> /etc/slurm/slurmdbd.conf
     chown slurm:slurm /etc/slurm/slurmdbd.conf
     chmod 600 /etc/slurm/slurmdbd.conf
@@ -34,8 +37,8 @@ fi
 
 if [ "$1" = "slurmctld" ]
 then
-    echo "---> Starting the MUNGE Authentication service (munged) ..."
-    gosu munge /usr/sbin/munged
+
+    start_munge
 
     echo "---> Waiting for slurmdbd to become active before starting slurmctld ..."
 
@@ -65,8 +68,7 @@ then
     ulimit -n 131072
     ulimit -a
 
-    echo "---> Starting the MUNGE Authentication service (munged) ..."
-    gosu munge /usr/sbin/munged
+    start_munge
 
     echo "---> Waiting for slurmctld to become active before starting slurmd..."
 
@@ -85,30 +87,28 @@ if [ "$1" = "login" ]
 then
     
     mkdir -p /home/rocky/.ssh
-    cp tempmounts/authorized_keys /home/rocky/.ssh/authorized_keys
+    cp /tmp/authorized_keys /home/rocky/.ssh/authorized_keys
 
     echo "---> Setting permissions for user home directories"
-    cd /home
-    for DIR in */;
-    do USER_TO_SET=$( echo $DIR | sed "s/.$//" ) && (chown -R $USER_TO_SET:$USER_TO_SET $USER_TO_SET || echo "Failed to take ownership of $USER_TO_SET") \
-     && (chmod 700 /home/$USER_TO_SET/.ssh || echo "Couldn't set permissions for .ssh directory for $USER_TO_SET") \
-     && (chmod 600 /home/$USER_TO_SET/.ssh/authorized_keys || echo "Couldn't set permissions for .ssh/authorized_keys for $USER_TO_SET");
+    pushd /home > /dev/null
+    for DIR in *
+        do
+        chown -R $DIR:$DIR $DIR || echo "Failed to change ownership of $DIR"
+        chmod 700 $DIR/.ssh || echo "Couldn't set permissions for .ssh/ directory of $DIR"
+        chmod 600 $DIR/.ssh/authorized_keys || echo "Couldn't set permissions for .ssh/authorized_keys for $USER_TO_SET"
     done
-    echo "---> Complete"
-    echo "Starting sshd"
+    popd > /dev/null
+
+    echo "---> Starting sshd"
     ssh-keygen -A
     /usr/sbin/sshd
 
-    echo "---> Starting the MUNGE Authentication service (munged) ..."
-    gosu munge /usr/sbin/munged -F
-    echo "---> MUNGE Complete"
+    start_munge --foreground
 fi
 
 if [ "$1" = "check-queue-hook" ]
 then
-    echo "---> Starting the MUNGE Authentication service (munged) ..."
-    gosu munge /usr/sbin/munged
-    echo "---> MUNGE Complete"
+    start_munge
 
     RUNNING_JOBS=$(squeue --states=RUNNING,COMPLETING,CONFIGURING,RESIZING,SIGNALING,STAGE_OUT,STOPPED,SUSPENDED --noheader --array | wc --lines)
 

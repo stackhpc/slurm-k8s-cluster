@@ -22,7 +22,7 @@ spec:
       containers:
         - args:
             - slurmctld
-          image: {{ .Values.sdcImage }}
+          image: {{ .Values.slurmImage }}
           name: slurmctld
           ports:
             - containerPort: 6817
@@ -33,7 +33,7 @@ spec:
             - mountPath: /etc/slurm/slurm.conf
               name: slurm-config-volume
               subPath: slurm.conf
-            - mountPath: /tempmounts/munge.key
+            - mountPath: /tmp/munge.key
               name: munge-key-secret
               subPath: munge.key
             - mountPath: /var/spool/slurmctld
@@ -59,6 +59,7 @@ spec:
         - name: munge-key-secret
           secret:
             secretName: {{ .Values.secrets.mungeKey }}
+            defaultMode: 0400
         - name: kubectl-secret
           secret:
             secretName: kubectl-secret

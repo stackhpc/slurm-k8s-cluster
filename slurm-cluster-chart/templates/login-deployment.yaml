@@ -24,7 +24,7 @@ spec:
       containers:
         - args:
             - login
-          image: {{ .Values.sdcImage }}
+          image: {{ .Values.slurmImage }}
           name: login
           ports:
             - containerPort: 22
@@ -34,14 +34,14 @@ spec:
             - mountPath: /etc/slurm/slurm.conf
               name: slurm-config-volume
               subPath: slurm.conf
-            - mountPath: /tempmounts/munge.key
+            - mountPath: /tmp/munge.key
               name: munge-key-secret
               subPath: munge.key
             - mountPath: /etc/ssh/sshd_config
               subPath: sshd_config
               name: sshd-config-configmap
             - name: authorized-keys
-              mountPath: /tempmounts/authorized_keys
+              mountPath: /tmp/authorized_keys
               subPath: authorized_keys
           resources: {}
       hostname: login
@@ -62,6 +62,7 @@ spec:
         - name: munge-key-secret
           secret:
             secretName: {{ .Values.secrets.mungeKey }}
+            defaultMode: 0400
         - name: authorized-keys
           configMap:
             name: {{ .Values.configmaps.authorizedKeys }}

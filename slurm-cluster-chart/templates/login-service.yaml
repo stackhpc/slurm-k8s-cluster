@@ -8,7 +8,7 @@ metadata:
   name: login
 spec:
   ports:
-    - name: "ssh"
+    - name: ssh
       port: 22
       targetPort: 22
   type: LoadBalancer
