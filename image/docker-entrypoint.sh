@@ -48,11 +48,12 @@ then
     done
     echo "-- slurmdbd is now active ..."
 
-    echo "---> Setting owernship ..."
-    cp /tmp/kubeconfig /etc/slurm/kubeconfig
-    chown slurm:slurm \
-        /var/spool/slurmctld \
-        /etc/slurm/kubeconfig
+    echo "---> Setting ownership for state directory ..."
+    chown slurm:slurm /var/spool/slurmctld
+
+    echo "---> Copying Kubeconfig ..."
+    install -o slurm -g slurm -m u=rw,go= -d /var/lib/slurmctld/
+    install -o slurm -g slurm u=r,go= /tmp/kubeconfig /var/lib/slurmctld/
 
     echo "---> Starting the Slurm Controller Daemon (slurmctld) ..."
     if /usr/sbin/slurmctld -V | grep -q '17.02' ; then

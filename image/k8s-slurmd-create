@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-export KUBECONFIG=/etc/slurm/kubeconfig
+export KUBECONFIG=/var/lib/slurmctld/kubeconfig
 
 echo "$(date) Resume invoked $0 $*" >> /var/log/power_save.log
 
