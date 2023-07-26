@@ -40,9 +40,6 @@ spec:
             - mountPath: /tmp/kubeconfig
               name: kubeconfig-secret
               subPath: kubeconfig
-            - mountPath: /etc/slurm/slurmd-pod-template.yml
-              name: slurmd-pod-template
-              subPath: podTemplate
       dnsConfig:
         searches:
           - slurmd.default.svc.cluster.local
@@ -55,8 +52,12 @@ spec:
           persistentVolumeClaim:
             claimName: var-spool-slurmctld
         - name: slurm-config-volume
-          configMap:
-            name: {{ .Values.configmaps.slurmConf }}
+          projected:
+            sources:
+              - configMap:
+                  name: {{ .Values.configmaps.slurmConf }}
+              - configMap:
+                  name: slurmd-pod-template
         - name: munge-key-secret
           secret:
             secretName: {{ .Values.secrets.mungeKey }}
@@ -65,6 +66,3 @@ spec:
           secret:
             secretName: kubeconfig-secret
             defaultMode: 0400
-        - name: slurmd-pod-template
-          configMap:
-            name: slurmd-pod-template

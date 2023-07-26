@@ -7,5 +7,5 @@ echo "$(date) Resume invoked $0 $*" >> /var/log/power_save.log
 hosts=$(scontrol show hostnames $1) # this is purely a textual expansion, doens't depend on defined nodes
 for host in $hosts
 do
-   sed s/SLURMD_NODENAME/$host/ | kubectl create -f -
+   sed s/SLURMD_NODENAME/$host/ /etc/slurm/slurmd-pod-template.yml | kubectl create -f -
 done

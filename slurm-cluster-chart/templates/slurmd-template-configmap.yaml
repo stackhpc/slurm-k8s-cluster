@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: slurmd-pod-template
 data:
-  podTemplate: |
+  slurmd-pod-template.yml: |
     apiVersion: v1
     kind: Pod
     metadata:
