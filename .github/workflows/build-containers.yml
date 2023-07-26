@@ -3,7 +3,7 @@ on:
   push:
     paths:
       - .github/workflows/build-containers.yml
-      - image/
+      - image/**
   workflow_dispatch: 
 
 jobs:
