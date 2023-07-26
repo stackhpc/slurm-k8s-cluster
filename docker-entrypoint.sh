@@ -49,8 +49,10 @@ then
     done
     echo "-- slurmdbd is now active ..."
 
-    echo "---> Setting permissions for state directory ..."
-    chown slurm:slurm /var/spool/slurmctld
+    echo "---> Setting owernship ..."
+    chown slurm:slurm \
+        /var/spool/slurmctld \
+        /etc/slurm/kubeconfig
 
     echo "---> Starting the Slurm Controller Daemon (slurmctld) ..."
     if /usr/sbin/slurmctld -V | grep -q '17.02' ; then

@@ -12,4 +12,5 @@ kubectl create secret generic munge-key-secret \
 -o yaml | \
 kubectl apply -f -
 
-cp $KUBECONFIG slurm-cluster-chart/files/kubectl
+cp $KUBECONFIG slurm-cluster-chart/files/kubeconfig
+echo "copied $KUBECONFIG into slurm-cluster-chart/files/"
