@@ -52,7 +52,7 @@ then
     chown slurm:slurm /var/spool/slurmctld
 
     echo "---> Copying Kubeconfig ..."
-    install -o slurm -g slurm -m u=rw,go= -d /var/lib/slurmctld/
+    install -o slurm -g slurm -m u=rwX,go= -d /var/lib/slurmctld/
     install -o slurm -g slurm -m u=r,go= /tmp/kubeconfig /var/lib/slurmctld/
 
     echo "---> Starting the Slurm Controller Daemon (slurmctld) ..."
