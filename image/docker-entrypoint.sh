@@ -50,6 +50,7 @@ then
     echo "-- slurmdbd is now active ..."
 
     echo "---> Setting owernship ..."
+    cp /tmp/kubeconfig /etc/slurm/kubeconfig
     chown slurm:slurm \
         /var/spool/slurmctld \
         /etc/slurm/kubeconfig

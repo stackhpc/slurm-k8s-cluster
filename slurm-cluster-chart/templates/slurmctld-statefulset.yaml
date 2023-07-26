@@ -38,10 +38,9 @@ spec:
               subPath: munge.key
             - mountPath: /var/spool/slurmctld
               name: slurmctld-state
-            - mountPath: /etc/slurm/kubeconfig
+            - mountPath: /tmp/kubeconfig
               name: kubeconfig-secret
               subPath: kubeconfig
-              readOnly: true
             - mountPath: /etc/slurm/slurmd-pod-template.yml
               name: slurmd-pod-template
               subPath: podTemplate
