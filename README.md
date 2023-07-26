@@ -132,11 +132,21 @@ Note: The mpirun script assumes you are running as user 'rocky'. If you are runn
 
 ### Changes to config files
 
-To guarantee changes to config files are propagated to the cluster, use
+Changes to the Slurm configuration in `slurm-cluster-chart/files/slurm.conf` will be propagated (it may take a few seconds) to `/etc/slurm/slurm.conf` for all pods except the `slurmdbd` pod by running
+
 ```console
-kubectl rollout restart deployment <deployment-names>
+helm upgrade <deployment-name> slurm-cluster-chart/
 ```
-Generally restarts to `slurmd`, `slurmctld`, `login` and `slurmdbd` will be required
+
+The new Slurm configuration can then be read by running `scontrol reconfigure` as root inside a Slurm pod. The [slurm.conf documentation](https://slurm.schedmd.com/slurm.conf.html) notes that some changes require a restart of all daemons, which here requires redeploying the Slurm pods as described below.
+
+Changes to other configuration files (e.g. Munge key etc) require a redeploy of the appropriate pods.
+
+To redeploy pods use:
+```console
+kubectl rollout restart deployment <deployment-names ...>
+```
+Generally restarts to `slurmd`, `slurmctld`, `login` and `slurmdbd` will be required.
 
 ### Changes to secrets
 
