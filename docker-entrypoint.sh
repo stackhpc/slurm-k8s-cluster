@@ -33,9 +33,8 @@ then
     # echo "-- Database is now active ..."
 
     # exec gosu slurm /usr/sbin/slurmdbd -Dvvv
-fi
 
-if [ "$1" = "slurmctld" ]
+elif [ "$1" = "slurmctld" ]
 then
 
     start_munge
@@ -58,9 +57,8 @@ then
     else
         exec gosu slurm /usr/sbin/slurmctld -i -Dvvv
     fi
-fi
 
-if [ "$1" = "slurmd" ]
+elif [ "$1" = "slurmd" ]
 then
     echo "---> Set shell resource limits ..."
     ulimit -l unlimited
@@ -81,9 +79,8 @@ then
 
     echo "---> Starting the Slurm Node Daemon (slurmd) ..."
     exec /usr/sbin/slurmd -F -Dvvv
-fi
 
-if [ "$1" = "login" ]
+elif [ "$1" = "login" ]
 then
     
     mkdir -p /home/rocky/.ssh
@@ -104,9 +101,8 @@ then
     /usr/sbin/sshd
 
     start_munge --foreground
-fi
 
-if [ "$1" = "check-queue-hook" ]
+elif [ "$1" = "check-queue-hook" ]
 then
     start_munge
 
@@ -118,6 +114,7 @@ then
     else
             exit 1
     fi
-fi
 
-exec "$@"
+else:
+    exec "$@"
+fi
