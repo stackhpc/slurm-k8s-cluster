@@ -16,23 +16,23 @@ then
 
     start_munge
 
-    # echo "---> Starting the Slurm Database Daemon (slurmdbd) ..."
+    echo "---> Starting the Slurm Database Daemon (slurmdbd) ..."
 
-    # cp /tmp/slurmdbd.conf /etc/slurm/slurmdbd.conf
-    # echo "StoragePass=${StoragePass}" >> /etc/slurm/slurmdbd.conf
-    # chown slurm:slurm /etc/slurm/slurmdbd.conf
-    # chmod 600 /etc/slurm/slurmdbd.conf
-    # {
-    #     . /etc/slurm/slurmdbd.conf
-    #     until echo "SELECT 1" | mysql -h $StorageHost -u$StorageUser -p$StoragePass 2>&1 > /dev/null
-    #     do
-    #         echo "-- Waiting for database to become active ..."
-    #         sleep 2
-    #     done
-    # }
-    # echo "-- Database is now active ..."
+    cp /tmp/slurmdbd.conf /etc/slurm/slurmdbd.conf
+    echo "StoragePass=${StoragePass}" >> /etc/slurm/slurmdbd.conf
+    chown slurm:slurm /etc/slurm/slurmdbd.conf
+    chmod 600 /etc/slurm/slurmdbd.conf
+    {
+        . /etc/slurm/slurmdbd.conf
+        until echo "SELECT 1" | mysql -h $StorageHost -u$StorageUser -p$StoragePass 2>&1 > /dev/null
+        do
+            echo "-- Waiting for database to become active ..."
+            sleep 2
+        done
+    }
+    echo "-- Database is now active ..."
 
-    # exec gosu slurm /usr/sbin/slurmdbd -Dvvv
+    exec gosu slurm /usr/sbin/slurmdbd -Dvvv
 
 elif [ "$1" = "slurmctld" ]
 then
@@ -115,6 +115,10 @@ then
             exit 1
     fi
 
-else:
+elif [ "$1" = "debug" ]
+then
+    start_munge --foreground
+
+else
     exec "$@"
 fi
