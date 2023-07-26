@@ -22,9 +22,8 @@ spec:
           - mountPath: /tmp/munge.key
             name: munge-key-secret
             subPath: munge.key
-          - mountPath: /etc/slurm/slurm.conf
+          - mountPath: /etc/slurm/
             name: slurm-config-volume
-            subPath: slurm.conf
       volumes:
         - name: munge-key-secret
           secret:
