@@ -57,9 +57,9 @@ then
 
     echo "---> Starting the Slurm Controller Daemon (slurmctld) ..."
     if /usr/sbin/slurmctld -V | grep -q '17.02' ; then
-        exec gosu slurm /usr/sbin/slurmctld -Dvvv
+        exec gosu slurm /usr/sbin/slurmctld -D "${@:2}"
     else
-        exec gosu slurm /usr/sbin/slurmctld -i -Dvvv
+        exec gosu slurm /usr/sbin/slurmctld -i -D "${@:2}"
     fi
 
 elif [ "$1" = "slurmd" ]
@@ -82,7 +82,7 @@ then
     echo "-- slurmctld is now active ..."
 
     echo "---> Starting the Slurm Node Daemon (slurmd) ..."
-    exec /usr/sbin/slurmd "${@:2}"
+    exec /usr/sbin/slurmd -D "${@:2}"
 
 elif [ "$1" = "login" ]
 then

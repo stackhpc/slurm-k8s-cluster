@@ -25,6 +25,8 @@ data:
       containers:
         - args:
             - slurmd
+            - -vvvvv
+
           image: {{ .Values.slurmImage }}
           name: slurmd
           ports:
