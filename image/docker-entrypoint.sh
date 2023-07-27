@@ -83,6 +83,9 @@ then
 elif [ "$1" = "login" ]
 then
     
+    chown root:root /home
+    chmod 755 /home
+
     mkdir -p /home/rocky/.ssh
     cp /tmp/authorized_keys /home/rocky/.ssh/authorized_keys
 
