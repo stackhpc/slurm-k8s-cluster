@@ -25,6 +25,7 @@ data:
       containers:
         - args:
             - slurmd
+            - -b
             - -vvvvv
 
           image: {{ .Values.slurmImage }}
