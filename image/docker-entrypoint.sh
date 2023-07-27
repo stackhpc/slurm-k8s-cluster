@@ -32,7 +32,7 @@ then
     }
     echo "-- Database is now active ..."
 
-    exec gosu slurm /usr/sbin/slurmdbd -Dvvv
+    exec gosu slurm /usr/sbin/slurmdbd -D "${@:2}"
 
 elif [ "$1" = "slurmctld" ]
 then
@@ -89,7 +89,7 @@ then
     
     chown root:root /home
     chmod 755 /home
-    
+
     mkdir -p /home/rocky/.ssh
     cp /tmp/authorized_keys /home/rocky/.ssh/authorized_keys
 

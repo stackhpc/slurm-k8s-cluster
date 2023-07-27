@@ -27,7 +27,6 @@ data:
             - slurmd
             - -b
             - -vvvvv
-
           image: {{ .Values.slurmImage }}
           name: slurmd
           ports:
