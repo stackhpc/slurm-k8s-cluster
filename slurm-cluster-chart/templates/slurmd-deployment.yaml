@@ -31,6 +31,8 @@ spec:
       containers:
         - args:
             - slurmd
+            - -F
+            - -vvv
           image: {{ .Values.slurmImage }}
           name: slurmd
           ports:
