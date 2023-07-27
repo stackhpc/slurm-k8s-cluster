@@ -27,6 +27,8 @@ data:
             - slurmd
             - -b
             - -vvvvv
+            - -N
+            - SLURMD_NODENAME
           image: {{ .Values.slurmImage }}
           name: slurmd
           ports:
@@ -42,6 +44,8 @@ data:
               subPath: munge.key
           securityContext:
             privileged: true
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
       dnsConfig:
         searches:
           - slurmd.default.svc.cluster.local
