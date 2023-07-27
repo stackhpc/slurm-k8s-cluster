@@ -33,6 +33,7 @@ data:
           name: slurmd
           ports:
             - containerPort: 6818
+              hostPort: 6818
           resources: {}
           volumeMounts:
             - mountPath: /etc/slurm/
