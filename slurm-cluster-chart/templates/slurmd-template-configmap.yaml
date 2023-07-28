@@ -27,10 +27,13 @@ data:
             - slurmd
             - -b
             - -vvvvv
+            - -N
+            - SLURMD_NODENAME
           image: {{ .Values.slurmImage }}
           name: slurmd
           ports:
             - containerPort: 6818
+              hostPort: 6818
           resources: {}
           volumeMounts:
             - mountPath: /etc/slurm/
@@ -42,6 +45,8 @@ data:
               subPath: munge.key
           securityContext:
             privileged: true
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
       dnsConfig:
         searches:
           - slurmd.default.svc.cluster.local
