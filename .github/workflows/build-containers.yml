@@ -3,9 +3,8 @@ on:
   push:
     paths:
       - .github/workflows/build-containers.yml
-      - Dockerfile
-      - docker-entrypoint.sh
-  workflow_dispatch: 
+      - image/**
+  workflow_dispatch:
 
 jobs:
   build_push_api:
@@ -49,6 +48,7 @@ jobs:
         with:
           provenance: false
           push: true
+          context: image/
           tags: ${{ steps.image-meta.outputs.tags }}
           labels: ${{ steps.image-meta.outputs.labels }}
           cache-from: type=local,src=/tmp/.buildx-cache
