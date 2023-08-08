@@ -110,10 +110,21 @@ then
     gosu munge /usr/sbin/munged
     echo "---> MUNGE Complete"
 
+    ALL_NODES=$( sinfo --Node --noheader --Format=NodeList )
+
+    for i in $ALL_NODES
+    do
+            scontrol update NodeName=$i State=DRAIN Reason="Preventing new jobs running before upgrade"
+    done
+
     RUNNING_JOBS=$(squeue --states=RUNNING,COMPLETING,CONFIGURING,RESIZING,SIGNALING,STAGE_OUT,STOPPED,SUSPENDED --noheader --array | wc --lines)
 
     if [[ $RUNNING_JOBS -eq 0 ]]
     then
+            for i in $ALL_NODES
+            do
+                    scontrol update NodeName=$i State=RESUME
+            done
             exit 0
     else
             exit 1
