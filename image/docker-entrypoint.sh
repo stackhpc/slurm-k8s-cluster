@@ -95,7 +95,7 @@ then
         do
         chown -R $DIR:$DIR $DIR || echo "Failed to change ownership of $DIR"
         chmod 700 $DIR/.ssh || echo "Couldn't set permissions for .ssh/ directory of $DIR"
-        chmod 600 $DIR/.ssh/authorized_keys || echo "Couldn't set permissions for .ssh/authorized_keys for $USER_TO_SET"
+        chmod 600 $DIR/.ssh/authorized_keys || echo "Couldn't set permissions for .ssh/authorized_keys for $DIR"
     done
     popd > /dev/null
 
