@@ -152,7 +152,7 @@ for the `slurmdbd`, `login` and `mysql` pods and
 kubectl rollout restart statefulset <statefulset-names ...>
 ```
 for the `slurmd` and `slurmctld` pods
-```
+
 Generally restarts to `slurmd`, `slurmctld`, `login` and `slurmdbd` will be required.
 
 ### Changes to secrets
