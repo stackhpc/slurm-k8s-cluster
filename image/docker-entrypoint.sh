@@ -115,11 +115,16 @@ then
 
     if [[ $RUNNING_JOBS -eq 0 ]]
     then
-        scontrol update NodeName=all State=UNDRAIN
         exit 0
     else
         exit 1
     fi
+
+elif [ "$1" = "undrain-nodes-hook" ]
+then
+    start_munge
+    scontrol update NodeName=all State=UNDRAIN
+    exit 0
 
 elif [ "$1" = "debug" ]
 then
