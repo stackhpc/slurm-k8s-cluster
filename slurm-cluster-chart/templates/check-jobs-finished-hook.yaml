@@ -15,20 +15,20 @@ spec:
       restartPolicy: Never
       containers:
       - name: check-jobs-finished-hook
-        image: {{ .Values.sdcImage }}
+        image: {{ .Values.slurmImage }}
         args:
           - check-queue-hook
         volumeMounts:
-          - mountPath: /tempmounts/munge.key
+          - mountPath: /tmp/munge.key
             name: munge-key-secret
             subPath: munge.key
-          - mountPath: /etc/slurm/slurm.conf
+          - mountPath: /etc/slurm/
             name: slurm-config-volume
-            subPath: slurm.conf
       volumes:
         - name: munge-key-secret
           secret:
             secretName: {{ .Values.secrets.mungeKey }}
+            defaultMode: 0400
         - name: slurm-config-volume
           configMap:
             name: {{ .Values.configmaps.slurmConf }}

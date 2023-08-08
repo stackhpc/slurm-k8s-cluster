@@ -31,18 +31,19 @@ spec:
       containers:
         - args:
             - slurmd
-          image: {{ .Values.sdcImage }}
+            - -F
+            - -vvv
+          image: {{ .Values.slurmImage }}
           name: slurmd
           ports:
             - containerPort: 6818
           resources: {}
           volumeMounts:
-            - mountPath: /etc/slurm/slurm.conf
+            - mountPath: /etc/slurm/
               name: slurm-config-volume
-              subPath: slurm.conf
             - mountPath: {{ .Values.nfs.mountPath }}
               name: slurm-jobdir
-            - mountPath: /tempmounts/munge.key
+            - mountPath: /tmp/munge.key
               name: munge-key-secret
               subPath: munge.key
           securityContext:
@@ -61,3 +62,4 @@ spec:
         - name: munge-key-secret
           secret:
             secretName: {{ .Values.secrets.mungeKey }}
+            defaultMode: 0400

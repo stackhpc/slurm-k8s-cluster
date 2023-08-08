@@ -8,7 +8,7 @@ metadata:
   name: slurmdbd
 spec:
   ports:
-    - name: "6819"
+    - name: slurmdbd
       port: 6819
       targetPort: 6819
   selector:
