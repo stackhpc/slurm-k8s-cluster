@@ -106,7 +106,7 @@ then
         chmod 600 $DIR/.ssh/authorized_keys || echo "Couldn't set permissions for .ssh/authorized_keys for $DIR"
     done
     popd > /dev/null
-    
+
     echo "---> Complete"
     echo "---> Starting sshd"
     cp /tempmounts/etc/ssh/* /etc/ssh/
@@ -116,9 +116,7 @@ then
     chmod 600 /etc/ssh/ssh_host_rsa_key
     /usr/sbin/sshd
 
-    echo "---> Starting the MUNGE Authentication service (munged) ..."
-    gosu munge /usr/sbin/munged
-    echo "---> MUNGE Complete"
+    start_munge
 
     echo "---> Setting up self ssh capabilities for OOD"
     ssh-keyscan localhost > /etc/ssh/ssh_known_hosts
