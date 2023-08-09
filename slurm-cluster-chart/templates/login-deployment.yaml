@@ -32,6 +32,10 @@ spec:
                 secretKeyRef:
                   name: htdbm-secret
                   key: password
+            - name: JUPYTER_REPO
+              value: {{ .Values.jupyterApp.repoURL }}
+            - name: JUPYTER_TAG
+              value: {{ .Values.jupyterApp.repoTag }}
           ports:
             - containerPort: 22
             - containerPort: 80

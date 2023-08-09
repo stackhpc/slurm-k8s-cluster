@@ -132,7 +132,7 @@ then
 
     echo "---> Setting up Jupyter App"
     mkdir --parents /var/www/ood/apps/sys/jupyter
-    git clone https://github.com/stackhpc/OOD-containerised-jupyter.git /var/www/ood/apps/sys/jupyter
+    git clone $JUPYTER_REPO --branch $JUPYTER_TAG /var/www/ood/apps/sys/jupyter
 
     echo "---> Starting Apache server"
     /usr/sbin/httpd -k start -X -e debug

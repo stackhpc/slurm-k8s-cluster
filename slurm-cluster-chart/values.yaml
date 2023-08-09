@@ -22,3 +22,6 @@ secrets:
   databaseAuth: database-auth-secret
   mungeKey: munge-key-secret
   
+jupyterApp:
+  repoURL: "https://github.com/stackhpc/OOD-containerised-jupyter.git"
+  repoTag: "v0.1"
