@@ -119,7 +119,7 @@ then
     echo "" >> /home/rocky/.ssh/authorized_keys #Adding newline to avoid breaking authorized_keys file
     cat /home/rocky/.ssh/id_rsa.pub >> /home/rocky/.ssh/authorized_keys
 
-    echo "---> Starting Apache Server"
+    echo "---> Setting up Apache Server"
 
     mkdir --parents /etc/ood/config/apps/shell
     env > /etc/ood/config/apps/shell/env
@@ -129,6 +129,12 @@ then
     mkdir --parents /opt/rh/httpd24/root/etc/httpd/
 
     /usr/bin/htdbm -cb /opt/rh/httpd24/root/etc/httpd/.htpasswd.dbm rocky $ROCKY_OOD_PASS
+
+    echo "---> Setting up Jupyter App"
+    mkdir --parents /var/www/ood/apps/sys/jupyter
+    git clone https://github.com/stackhpc/OOD-containerised-jupyter.git /var/www/ood/apps/sys/jupyter
+
+    echo "---> Starting Apache server"
     /usr/sbin/httpd -k start -X -e debug
 fi
 

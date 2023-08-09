@@ -36,7 +36,6 @@ spec:
           ports:
             - containerPort: 6818
             - containerPort: 8888
-            - containerPort: 8889
           resources: {}
           volumeMounts:
             - mountPath: /etc/slurm/slurm.conf
