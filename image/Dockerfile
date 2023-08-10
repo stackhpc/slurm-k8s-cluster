@@ -18,6 +18,14 @@ RUN set -ex \
     && yum -y module enable ruby:2.7 nodejs:14 \
     && yum -y install https://yum.osc.edu/ondemand/2.0/ondemand-release-web-2.0-1.noarch.rpm \
     && yum -y module install ruby nodejs \
+    && cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo \
+    [kubernetes] \
+    name=Kubernetes \
+    baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch \
+    enabled=1 \
+    gpgcheck=1 \
+    gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg \
+    EOF \
     && yum -y install \
        wget \
        bzip2 \
@@ -46,6 +54,7 @@ RUN set -ex \
        openssh-server \
        apptainer \
        ondemand \
+       kubectl \
     && yum clean all \
     && rm -rf /var/cache/yum
 
