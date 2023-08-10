@@ -1,11 +1,5 @@
 #!/bin/bash
 
-kubectl create secret generic munge-key-secret \
---dry-run=client \
---from-literal=munge.key=$(dd if=/dev/urandom bs=1 count=1024 2>/dev/null | base64 -w 0) \
--o yaml | \
-kubectl apply -f -
-
 mkdir -p ./temphostkeys/etc/ssh
 ssh-keygen -A -f ./temphostkeys
 kubectl create secret generic host-keys-secret \
