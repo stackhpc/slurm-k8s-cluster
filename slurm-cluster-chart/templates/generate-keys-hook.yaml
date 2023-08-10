@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: generate-keys-hook
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-delete-policy": hook-succeeded
+    "helm.sh/hook-weight": "3"
+spec:
+  backoffLimit: 0
+  ttlSecondsAfterFinished: 0
+  template:
+    metadata:
+      name: generate-keys-hook
+    spec:
+      serviceAccountName: secret-generator-account
+      restartPolicy: Never
+      containers:
+      - name: generate-keys-hook
+        image: {{ .Values.slurmImage }}
+        args:
+          - generate-keys-hook
