@@ -28,10 +28,7 @@ spec:
           name: login
           env:
             - name: ROCKY_OOD_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: htdbm-secret
-                  key: password
+              value: {{ .Values.openOndemand.password }}
           ports:
             - containerPort: 22
             - containerPort: 80

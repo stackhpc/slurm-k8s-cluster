@@ -21,4 +21,7 @@ configmaps:
 secrets:
   databaseAuth: database-auth-secret
   mungeKey: munge-key-secret
-  
+
+#OOD username is rocky
+openOndemand:
+  password: password
