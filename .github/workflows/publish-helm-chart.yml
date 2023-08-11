@@ -32,8 +32,7 @@ jobs:
 
       - name: "Package Chart"
         run: |
-          mkdir -p .cr-release-packages
-          helm package slurm-cluster-chart --version ${{ steps.semver.outputs.version }} --destination .cr-release-packages
+          mkdir -p .cr-release-packages          
           helm package rooknfs --version ${{ steps.semver.outputs.version }} --destination .cr-release-packages
 
       - name: Run chart-releaser
