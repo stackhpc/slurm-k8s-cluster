@@ -91,12 +91,6 @@ then
     mkdir -p /home/rocky/.ssh
     cp /tmp/authorized_keys /home/rocky/.ssh/authorized_keys
 
-    if [ -f /home/rocky/.ssh/id_rsa.pub ]; then
-        echo "ssh keys already found"
-    else
-            ssh-keygen -t rsa -f /home/rocky/.ssh/id_rsa -N ""
-    fi
-
     echo "---> Setting permissions for user home directories"
     pushd /home > /dev/null
     for DIR in *
@@ -119,6 +113,13 @@ then
     start_munge
 
     echo "---> Setting up self ssh capabilities for OOD"
+
+    if [ -f /home/rocky/.ssh/id_rsa.pub ]; then
+        echo "ssh keys already found"
+    else
+            ssh-keygen -t rsa -f /home/rocky/.ssh/id_rsa -N ""
+    fi
+
     ssh-keyscan localhost > /etc/ssh/ssh_known_hosts
     echo "" >> /home/rocky/.ssh/authorized_keys #Adding newline to avoid breaking authorized_keys file
     cat /home/rocky/.ssh/id_rsa.pub >> /home/rocky/.ssh/authorized_keys
