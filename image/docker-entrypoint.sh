@@ -125,8 +125,8 @@ then
 
     echo "---> Starting Apache Server"
 
-    mkdir --parents /etc/ood/config/apps/shell
-    env > /etc/ood/config/apps/shell/env
+    # mkdir --parents /etc/ood/config/apps/shell
+    # env > /etc/ood/config/apps/shell/env
 
     /usr/libexec/httpd-ssl-gencerts
     /opt/ood/ood-portal-generator/sbin/update_ood_portal
