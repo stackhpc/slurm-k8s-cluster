@@ -1,0 +1,17 @@
+{{- if .Values.enabled }}
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  labels:
+    app: rook-nfs
+  name: {{ .Values.storageClassName }}
+parameters:
+  exportName: {{ .Values.shareName }}
+  nfsServerName: {{ .Values.serverName }}
+  nfsServerNamespace:  {{ .Values.serverNamespace }}
+provisioner: nfs.rook.io/rook-nfs-provisioner
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+---
+{{- end }}

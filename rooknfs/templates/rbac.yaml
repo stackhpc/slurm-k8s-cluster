@@ -1,14 +1,15 @@
+{{- if .Values.enabled }}
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name:  rook-nfs
+  name:  {{ .Values.serverNamespace }}
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: rook-nfs-server
-  namespace: rook-nfs
+  namespace:  {{ .Values.serverNamespace }}
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
@@ -51,9 +52,10 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: rook-nfs-server
-     # replace with namespace where provisioner is deployed
-    namespace: rook-nfs
+    namespace:  {{ .Values.serverNamespace }}
 roleRef:
   kind: ClusterRole
   name: rook-nfs-provisioner-runner
   apiGroup: rbac.authorization.k8s.io
+---
+{{- end }}

@@ -1,13 +1,15 @@
+{{- if .Values.enabled }}
+---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: rook-nfs-system # namespace:operator
+  name: {{ .Values.systemNamespace }}
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: rook-nfs-operator
-  namespace: rook-nfs-system # namespace:operator
+  namespace: {{ .Values.systemNamespace }}
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
@@ -20,7 +22,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: rook-nfs-operator
-    namespace: rook-nfs-system # namespace:operator
+    namespace:  {{ .Values.systemNamespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -106,7 +108,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: rook-nfs-operator
-  namespace: rook-nfs-system # namespace:operator
+  namespace: {{ .Values.systemNamespace }}
   labels:
     app: rook-nfs-operator
 spec:
@@ -134,3 +136,5 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
+---
+{{- end}}
