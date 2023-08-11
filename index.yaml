@@ -11,4 +11,14 @@ entries:
     urls:
     - https://github.com/stackhpc/slurm-docker-cluster/releases/download/slurm-cluster-chart-0.1.0/slurm-cluster-chart-0.1.0.tgz
     version: 0.1.0
-generated: "2023-07-20T12:45:55.530462421Z"
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2023-08-11T09:46:48.154071298Z"
+    description: A Helm chart for Kubernetes
+    digest: 1d20ca84c91c15809382810f2449f2c76deab3cbe8e9b85d1714eec0d2e27ed9
+    name: slurm-cluster-chart
+    type: application
+    urls:
+    - https://github.com/stackhpc/slurm-docker-cluster/releases/download/slurm-cluster-chart-0.1.0-dev.0.azimuth-helm.282/slurm-cluster-chart-0.1.0-dev.0.azimuth-helm.282.tgz
+    version: 0.1.0-dev.0.azimuth-helm.282
+generated: "2023-08-11T09:46:48.154082298Z"
