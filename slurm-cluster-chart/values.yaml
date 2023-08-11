@@ -13,10 +13,12 @@ sqlImage: mariadb:10.10
 databaseStorage: 100Mi
 
 configmaps:
-  authorizedKeys: authorized-keys-configmap
   slurmConf: slurm-conf-configmap
   slurmdbdConf: slurmdbd-conf-configmap
   sshdConfig: sshd-config-configmap
+
+# If let undefined, assumes you have run publish-keys.sh to publish your public key prior to deployment
+sshPublicKey:
 
 secrets:
   databaseAuth: database-auth-secret

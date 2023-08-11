@@ -80,7 +80,11 @@ spec:
             defaultMode: 0400
         - name: authorized-keys
           configMap:
-            name: {{ .Values.configmaps.authorizedKeys }}
+            {{ if .Values.sshPublicKey }}
+            name: helm-authorized-keys-configmap
+            {{ else }}
+            name: authorized-keys-configmap
+            {{ end }}
         - name: cluster-config
           configMap:
             name: cluster-config
