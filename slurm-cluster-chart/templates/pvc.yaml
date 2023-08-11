@@ -1,0 +1,14 @@
+{{- if .Values.rooknfs.enabled }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.storage.claimName }}
+spec:
+  storageClassName: {{ .Values.storageClassName }}
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.storage.capacity }}
+{{- end }}

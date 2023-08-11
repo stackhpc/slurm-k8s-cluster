@@ -1,0 +1,55 @@
+{{- if .Values.rooknfs.enabled }}
+# NOTE: The cleanup jobs defined here are required to ensure that things which
+# Rook NFS is responsible for cleaning up are deleted before deleting the Rook
+# pods which do the actual clean up of NFS resources. For example, the RWM PVC
+# must be deleted before the Rook StorageClass and provisioner pod. However,
+# the PVC cannot be deleted until the pods which are using it are deleted, so
+# the various Slurm node pods must actually be the first resources deleted.
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: rook-nfs-cleanup
+---
+# TODO: Create a job-specific ClusterRole for the ServiceAccount
+# instead of using the cluster-admin role here
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: rook-nfs-cleanup
+subjects:
+- kind: ServiceAccount
+  name: rook-nfs-cleanup
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: rook-nfs-pre-delete-cleanup
+  annotations:
+    "helm.sh/hook": pre-delete
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      name: rook-nfs-pre-delete-cleanup
+    spec:
+      serviceAccountName:  rook-nfs-cleanup
+      containers:
+      - name: tester
+        image: bitnami/kubectl
+        command:
+         - "bin/bash"
+         - "-c"
+         - | 
+            kubectl delete -n {{ .Release.Namespace }} deployment {{ .Values.login.name }} --wait --cascade=foreground
+            kubectl delete -n {{ .Release.Namespace }} statefulset {{ .Values.slurmctld.name }} --wait --cascade=foreground
+            kubectl delete -n {{ .Release.Namespace }} statefulset {{ .Values.slurmd.name }} --wait --cascade=foreground
+            kubectl delete -n {{ .Release.Namespace }} pvc {{ .Values.storage.claimName }} --wait
+            kubectl delete -n {{ .Values.rooknfs.serverNamespace }} nfsservers {{ .Values.rooknfs.serverName }} --wait
+      restartPolicy: Never
+---
+{{- end }}
