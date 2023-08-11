@@ -173,3 +173,5 @@ and then restart the other dependent deployments to propagate changes:
 ```console
 kubectl rollout restart deployment slurmd slurmctld login slurmdbd
 ```
+
+# Known Issues
