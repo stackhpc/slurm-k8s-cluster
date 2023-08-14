@@ -24,4 +24,3 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           version: ${{ steps.semver.outputs.version }}
           app-version: ${{ steps.semver.outputs.short-sha }}
-          
