@@ -2,8 +2,17 @@ apiVersion: v1
 entries:
   rooknfs:
   - apiVersion: v2
+    appVersion: 8d6cc56
+    created: "2023-08-14T08:53:41.206580936Z"
+    description: An packaged installation of Rook NFS for Kubernetes.
+    digest: a67a48def6e432b8670be951daa3ab231082b4058bc9676bb3e1346aa5875d03
+    name: rooknfs
+    urls:
+    - rooknfs-0.1.0-dev.0.semver-test.246.tgz
+    version: 0.1.0-dev.0.semver-test.246
+  - apiVersion: v2
     appVersion: 4f15d6c
-    created: "2023-08-14T08:21:38.972462323Z"
+    created: "2023-08-14T08:53:41.206278441Z"
     description: An packaged installation of Rook NFS for Kubernetes.
     digest: 54cd9f0e61f5d282c006184ae87935414417efe7d3a66a8b120553f34ce8e251
     name: rooknfs
@@ -12,8 +21,18 @@ entries:
     version: 0.1.0-dev.0.semver-test.1
   slurm-cluster-chart:
   - apiVersion: v2
+    appVersion: 8d6cc56
+    created: "2023-08-14T08:53:41.20761962Z"
+    description: A Helm chart for Kubernetes
+    digest: b02d0ecb5494c7ba75f3c3fa2a51d61f88aab5cec863eb28d2e44fa81683ad1d
+    name: slurm-cluster-chart
+    type: application
+    urls:
+    - slurm-cluster-chart-0.1.0-dev.0.semver-test.246.tgz
+    version: 0.1.0-dev.0.semver-test.246
+  - apiVersion: v2
     appVersion: 4f15d6c
-    created: "2023-08-14T08:21:38.973019129Z"
+    created: "2023-08-14T08:53:41.207116128Z"
     description: A Helm chart for Kubernetes
     digest: ab36830c5da250006aad8087f90ca0fc398b6612ef9bad7a153c01ecc561d8ba
     name: slurm-cluster-chart
@@ -21,4 +40,4 @@ entries:
     urls:
     - slurm-cluster-chart-0.1.0-dev.0.semver-test.1.tgz
     version: 0.1.0-dev.0.semver-test.1
-generated: "2023-08-14T08:21:38.971973118Z"
+generated: "2023-08-14T08:53:41.205800249Z"
