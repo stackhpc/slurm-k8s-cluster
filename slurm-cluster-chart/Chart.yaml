@@ -1,6 +1,7 @@
 apiVersion: v2
 name: slurm-cluster-chart
-description: A Helm chart for Kubernetes
+description: A Helm chart for deploying Slurm on Kubernetes
+icon: https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Slurm_logo.svg/158px-Slurm_logo.svg.png
 
 # A chart can be either an 'application' or a 'library' chart.
 #
