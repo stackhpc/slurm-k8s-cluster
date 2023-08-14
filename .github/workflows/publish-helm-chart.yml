@@ -18,14 +18,8 @@ jobs:
         id: semver
         uses: stackhpc/github-actions/semver@master
 
-      # - name: Setup upterm session
-      #   uses: lhotari/action-upterm@v1
-      #   with:
-      #     ## limits ssh access and adds the ssh public keys of the listed GitHub users
-      #     limit-access-to-users: wtripp180901,sd109
-
       - name: Publish Helm charts
-        uses: stackhpc/github-actions/helm-publish@test/capture-stderr
+        uses: stackhpc/github-actions/helm-publish@master
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           version: ${{ steps.semver.outputs.version }}
