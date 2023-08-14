@@ -28,7 +28,7 @@ spec:
           name: login
           env:
             - name: ROCKY_OOD_PASS
-              value: {{ .Values.openOndemand.password }}
+              value: {{ .Values.openOnDemand.password }}
           ports:
             - containerPort: 22
             - containerPort: 80

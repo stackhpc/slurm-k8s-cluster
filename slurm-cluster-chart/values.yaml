@@ -25,5 +25,5 @@ secrets:
   mungeKey: munge-key-secret
 
 #OOD username is rocky
-openOndemand:
+openOnDemand:
   password: password
