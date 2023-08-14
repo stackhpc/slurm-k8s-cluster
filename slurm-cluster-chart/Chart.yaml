@@ -23,7 +23,8 @@ version: 0.1.0
 # It is recommended to use it with quotes.
 appVersion: "1.16.0"
 
-# dependencies:
-#   - name: rooknfs
-#     version: 0.0.1
-#     repository: file://../rooknfs
+dependencies:
+  - name: rooknfs
+    version: 0.0.1
+    repository: file://../rooknfs
+    
