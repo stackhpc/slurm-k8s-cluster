@@ -8,22 +8,27 @@ nfs:
   mountPath: /home
   claimName: rook-nfs-pv-claim
 
-sqlImage: mariadb:10.10
+# Values for Slurm's database container
+mySQL:
+  #Database image to be used
+  image: mariadb:10.10
+  #Storage requested by the var-lib-mysql volume backing the database
+  storage: 100Mi
 
-databaseStorage: 100Mi
-
+# Configmap resource names
 configmaps:
   slurmConf: slurm-conf-configmap
   slurmdbdConf: slurmdbd-conf-configmap
   sshdConfig: sshd-config-configmap
 
-# If let undefined, assumes you have run publish-keys.sh to publish your public key prior to deployment
+# Public key used for ssh access to the login node
+# If let undefined, assumes you have run the provided publish-keys.sh script to publish your public key prior to deployment
 sshPublicKey:
 
+# Secret resource names
 secrets:
-  databaseAuth: database-auth-secret
   mungeKey: munge-key-secret
 
-#OOD username is rocky
 openOnDemand:
+  #Password for default Open OnDemand user 'rocky'
   password: password
