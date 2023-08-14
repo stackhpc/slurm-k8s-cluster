@@ -25,7 +25,7 @@ jobs:
           limit-access-to-users: wtripp180901,sd109
 
       - name: Publish Helm charts
-        uses: stackhpc/github-actions/helm-publish@master
+        uses: stackhpc/github-actions/helm-publish@test/capture-stderr
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           version: ${{ steps.semver.outputs.version }}
