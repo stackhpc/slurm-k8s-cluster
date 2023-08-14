@@ -36,7 +36,7 @@ storage:
 # See rook-nfs sub-chart for full set of available config values
 rooknfs:
   enabled: true
-  storageClassName: *storageclassname
+  storageClassName: slurm-rook-nfs # NB this must match storage.storageClassName when using rook
   # Name for the NFSServer resource created by Rook
   serverName: rook-nfs
   # Capacity for the backing Read-Write-*Once* volume 
