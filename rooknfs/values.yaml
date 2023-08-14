@@ -28,5 +28,3 @@ operatorImage: rook/nfs:master
 # of various components in the same way as the Rook docs
 serverNamespace: rook-nfs
 systemNamespace: rook-nfs-system
-
-bump:
