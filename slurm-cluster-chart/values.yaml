@@ -62,4 +62,3 @@ secrets:
   databaseAuth: database-auth-secret
   mungeKey: munge-key-secret
   
-  
