@@ -29,7 +29,7 @@ storage:
   # Name for the R-W-M volume to provision
   claimName: slurm-shared-storage
   # Capacite of the R-W-M volume
-  capacity: &capacity 10Gi
+  capacity: &capacity 10Gi   # NB yaml anchor used so this value is also set for `rooknfs.storageCapacity` if necessary.
 
 
 # Values to be passed to the rook-nfs sub-chart
