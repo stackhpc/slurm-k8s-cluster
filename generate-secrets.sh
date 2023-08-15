@@ -1,13 +1,17 @@
 #!/bin/bash
+NAMESPACE="$1"
+if [[ -z $1 ]]; then
+    NAMESPACE=default
+fi
 
-kubectl create secret generic database-auth-secret \
+kubectl -n $NAMESPACE create secret generic database-auth-secret \
 --dry-run=client \
 --from-literal=password=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 32) \
 -o yaml | \
-kubectl apply -f -
+kubectl -n $NAMESPACE apply -f -
 
-kubectl create secret generic munge-key-secret \
+kubectl -n $NAMESPACE create secret generic munge-key-secret \
 --dry-run=client \
 --from-literal=munge.key=$(dd if=/dev/urandom bs=1 count=1024 2>/dev/null | base64 -w 0) \
 -o yaml | \
-kubectl apply -f -
+kubectl -n $NAMESPACE apply -f -
