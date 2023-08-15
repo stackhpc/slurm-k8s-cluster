@@ -38,9 +38,9 @@ All config files in `slurm-cluster-chart/files` will be mounted into the contain
 
 On initial deployment ONLY, run
 ```console
-./generate-secrets.sh
+./generate-secrets.sh <target-namespace>
 ```
-This generates a set of secrets. If these need to be regenerated, see "Reconfiguring the Cluster"
+This generates a set of secrets in the target namespace to be used by the Slurm cluster. If these need to be regenerated, see "Reconfiguring the Cluster"
 
 ### Connecting a RWX Volume
 
