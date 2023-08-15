@@ -46,6 +46,7 @@ RUN set -ex \
        openssh-server \
        apptainer \
        ondemand \
+       passwd \
        mod_authnz_pam \
     && yum clean all \
     && rm -rf /var/cache/yum
