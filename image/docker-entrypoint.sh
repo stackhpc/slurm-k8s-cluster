@@ -86,6 +86,8 @@ then
     chown root:root /home
     chmod 755 /home
 
+    echo $OOD_PASS | passwd --stdin rocky
+
     echo "---> Setting up ssh for user"
 
     mkdir -p /home/rocky/.ssh

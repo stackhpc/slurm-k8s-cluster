@@ -93,8 +93,7 @@ RUN mkdir /etc/sysconfig/slurm \
         /var/lib/slurmd/fed_mgr_state \
     && useradd -r --uid=990 slurm \
     && chown -R slurm:slurm /var/*/slurm* \
-    && useradd -u 1000 rocky \
-    && usermod -p 'openssl password' rocky
+    && useradd -u 1000 rocky
 
 VOLUME /etc/slurm
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
