@@ -40,7 +40,7 @@ spec:
               name: slurmctld-state
       dnsConfig:
         searches:
-          - slurmd.default.svc.cluster.local
+          - slurmd.{{ .Release.Namespace }}.svc.cluster.local
       restartPolicy: Always
       volumes:
         - name: slurm-jobdir
