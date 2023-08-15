@@ -26,8 +26,16 @@ spec:
             - login
           image: {{ .Values.slurmImage }}
           name: login
+          env:
+            - name: ROCKY_OOD_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: htdbm-secret
+                  key: password
           ports:
             - containerPort: 22
+            - containerPort: 80
+            - containerPort: 443
           volumeMounts:
             - mountPath: {{ .Values.nfs.mountPath }}
               name: slurm-jobdir
@@ -42,6 +50,17 @@ spec:
             - name: authorized-keys
               mountPath: /tmp/authorized_keys
               subPath: authorized_keys
+            - name: ood-portal
+              mountPath: /etc/ood/config/ood_portal.yml
+              subPath: ood_portal.yml
+            - name: httpd-config
+              mountPath: /etc/httpd/conf/httpd.conf
+              subPath: httpd.conf
+            - name: cluster-config
+              mountPath: /etc/ood/config/clusters.d/ood-cluster-config.yml
+              subPath: ood-cluster-config.yml
+            - name: host-keys
+              mountPath: /tempmounts/etc/ssh
           resources: {}
       hostname: login
       dnsConfig:
@@ -65,3 +84,15 @@ spec:
         - name: authorized-keys
           configMap:
             name: {{ .Values.configmaps.authorizedKeys }}
+        - name: cluster-config
+          configMap:
+            name: cluster-config
+        - name: ood-portal
+          configMap:
+            name: ood-portal-configmap
+        - name: httpd-config
+          configMap:
+            name: httpd-configmap
+        - name: host-keys
+          secret:
+            secretName: host-keys-secret

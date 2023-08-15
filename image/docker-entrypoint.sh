@@ -86,6 +86,8 @@ then
     chown root:root /home
     chmod 755 /home
 
+    echo "---> Setting up ssh for user"
+
     mkdir -p /home/rocky/.ssh
     cp /tmp/authorized_keys /home/rocky/.ssh/authorized_keys
 
@@ -99,11 +101,40 @@ then
     done
     popd > /dev/null
 
+    echo "---> Complete"
     echo "---> Starting sshd"
-    ssh-keygen -A
+    cp /tempmounts/etc/ssh/* /etc/ssh/
+    chmod 600 /etc/ssh/ssh_host_dsa_key
+    chmod 600 /etc/ssh/ssh_host_ecdsa_key
+    chmod 600 /etc/ssh/ssh_host_ed25519_key
+    chmod 600 /etc/ssh/ssh_host_rsa_key
     /usr/sbin/sshd
 
-    start_munge --foreground
+    start_munge
+
+    echo "---> Setting up self ssh capabilities for OOD"
+
+    if [ -f /home/rocky/.ssh/id_rsa.pub ]; then
+        echo "ssh keys already found"
+    else
+            ssh-keygen -t rsa -f /home/rocky/.ssh/id_rsa -N ""
+    fi
+
+    ssh-keyscan localhost > /etc/ssh/ssh_known_hosts
+    echo "" >> /home/rocky/.ssh/authorized_keys #Adding newline to avoid breaking authorized_keys file
+    cat /home/rocky/.ssh/id_rsa.pub >> /home/rocky/.ssh/authorized_keys
+
+    echo "---> Starting Apache Server"
+
+    # mkdir --parents /etc/ood/config/apps/shell
+    # env > /etc/ood/config/apps/shell/env
+
+    /usr/libexec/httpd-ssl-gencerts
+    /opt/ood/ood-portal-generator/sbin/update_ood_portal
+    mkdir --parents /opt/rh/httpd24/root/etc/httpd/
+
+    /usr/bin/htdbm -cb /opt/rh/httpd24/root/etc/httpd/.htpasswd.dbm rocky $ROCKY_OOD_PASS
+    /usr/sbin/httpd -k start -X -e debug
 
 elif [ "$1" = "check-queue-hook" ]
 then
