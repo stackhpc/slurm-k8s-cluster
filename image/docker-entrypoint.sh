@@ -131,6 +131,10 @@ then
 
     /usr/libexec/httpd-ssl-gencerts
 
+    cp /etc/pam.d/sshd /etc/pam.d/ood
+    chmod 640 /etc/shadow
+    chgrp apache /etc/shadow
+
     mkdir --parents /opt/rh/httpd24/root/etc/httpd/
     /usr/bin/htpasswd -cb /opt/rh/httpd24/root/etc/httpd/apache-passwords rocky $ROCKY_OOD_PASS
 
