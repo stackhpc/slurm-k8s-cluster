@@ -44,7 +44,7 @@ This generates a set of secrets. If these need to be regenerated, see "Reconfigu
 
 ### Connecting a RWX Volume
 
-A ReadWriteMany (RWX) volume is required for shared storage across cluster nodes. By default, the Rook NFS Helm chart is installed as a dependency of the Slurm cluster chart in order to provide a RWX capable Storage Class for the required shared volume. If the target Kubernetes cluster has an existing storage class which should be used instead, then `storageClass` in `values.yaml` should be set to the name of this existing class and the RookNFS dependency should be disabled by setting `rooknfs.enabled = false`.
+A ReadWriteMany (RWX) volume is required for shared storage across cluster nodes. By default, the Rook NFS Helm chart is installed as a dependency of the Slurm cluster chart in order to provide a RWX capable Storage Class for the required shared volume. If the target Kubernetes cluster has an existing storage class which should be used instead, then `storageClass` in `values.yaml` should be set to the name of this existing class and the RookNFS dependency should be disabled by setting `rooknfs.enabled = false`. In either case, the storage capacity of the provisioned RWX volume can be configured by setting the value of `storage.capacity`.
 
 See the separate RookNFS chart [values.yaml](./rooknfs/values.yaml) for further configuration options when using the RookNFS to provide the shared storage volume.
 
