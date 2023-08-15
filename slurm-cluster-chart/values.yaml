@@ -1,4 +1,4 @@
-slurmImage: ghcr.io/stackhpc/slurm-docker-cluster:7f4d64e
+slurmImage: ghcr.io/stackhpc/slurm-docker-cluster:7c0e2d9
 
 login:
   # Deployment resource name

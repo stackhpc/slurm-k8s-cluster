@@ -15,3 +15,25 @@ kubectl -n $NAMESPACE create secret generic munge-key-secret \
 --from-literal=munge.key=$(dd if=/dev/urandom bs=1 count=1024 2>/dev/null | base64) \
 -o yaml | \
 kubectl -n $NAMESPACE apply -f -
+
+mkdir -p ./temphostkeys/etc/ssh
+ssh-keygen -A -f ./temphostkeys
+kubectl -n $NAMESPACE create secret generic host-keys-secret \
+--dry-run=client \
+--from-file=./temphostkeys/etc/ssh \
+-o yaml | \
+kubectl -n $NAMESPACE apply -f -
+rm -rf ./temphostkeys
+
+OOD_PASS=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 16)
+
+kubectl -n $NAMESPACE create secret generic htdbm-secret \
+--dry-run=client \
+--from-literal=password=$OOD_PASS \
+-o yaml | \
+kubectl -n $NAMESPACE apply -f -
+
+echo "Open Ondemand Credentials:"
+echo "Username: rocky"
+echo "Password: $OOD_PASS"
+OOD_PASS=""
