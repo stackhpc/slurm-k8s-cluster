@@ -9,7 +9,7 @@ nfs:
   claimName: rook-nfs-pv-claim
 
 # Values for Slurm's database container
-mySQL:
+database:
   #Database image to be used
   image: mariadb:10.10
   #Storage requested by the var-lib-mysql volume backing the database
