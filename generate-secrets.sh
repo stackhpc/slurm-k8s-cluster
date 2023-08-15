@@ -6,7 +6,7 @@ fi
 
 kubectl -n $NAMESPACE create secret generic database-auth-secret \
 --dry-run=client \
---from-literal=password=abcdefghijklmnopqrstuvwxyz123456 \
+--from-literal=password=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 32) \
 -o yaml | \
 kubectl -n $NAMESPACE apply -f -
 
