@@ -118,6 +118,7 @@ then
         echo "ssh keys already found"
     else
             ssh-keygen -t rsa -f /home/rocky/.ssh/id_rsa -N ""
+            chown rocky:rocky id_rsa id_rsa.pub
     fi
 
     ssh-keyscan localhost > /etc/ssh/ssh_known_hosts
