@@ -130,10 +130,12 @@ then
     env > /etc/ood/config/apps/shell/env
 
     /usr/libexec/httpd-ssl-gencerts
-    /opt/ood/ood-portal-generator/sbin/update_ood_portal
-    mkdir --parents /opt/rh/httpd24/root/etc/httpd/
 
+    mkdir --parents /opt/rh/httpd24/root/etc/httpd/
     /usr/bin/htpasswd -cb /opt/rh/httpd24/root/etc/httpd/apache-passwords rocky $ROCKY_OOD_PASS
+
+    /opt/ood/ood-portal-generator/sbin/update_ood_portal
+    
     /usr/sbin/httpd -k start -X -e debug
 
 elif [ "$1" = "check-queue-hook" ]

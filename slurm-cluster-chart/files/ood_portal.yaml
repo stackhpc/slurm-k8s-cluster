@@ -8,19 +8,30 @@
 # Example:
 #     listen_addr_port: 443
 # Default: null (don't add any more listen directives)
-#listen_addr_port: 80
+#listen_addr_port: null
 
 # The server name used for name-based Virtual Host
 # Example:
 #     servername: 'www.example.com'
 # Default: null (don't use name-based Virtual Host)
-#servername: 128.232.226.84
-#serverAlias: 128.232.226.84
+#servername: null
+
+# The server aliases used for the name-based Virtual Host
+# Example:
+#     server_aliases:
+#       - foo.example.com
+#server_aliases: []
+
+# The server name used for rewrites
+# Example:
+#     proxy_server: 'proxy.example.com'
+# Default: The value of servername
+#proxy_server: null
 
 # The port specification for the Virtual Host
 # Example:
 #     port: 8080
-#Default: null (use default port 80 or 443 if SSL enabled)
+# Default: null (use default port 80 or 443 if SSL enabled)
 #port: null
 
 # List of SSL Apache directives
@@ -29,7 +40,6 @@
 #       - 'SSLCertificateFile "/etc/pki/tls/certs/www.example.com.crt"'
 #       - 'SSLCertificateKeyFile "/etc/pki/tls/private/www.example.com.key"'
 # Default: null (no SSL support)
-#ssl: null
 ssl:
 - 'SSLCertificateFile "/etc/pki/tls/certs/localhost.crt"'
 - 'SSLCertificateKeyFile "/etc/pki/tls/private/localhost.key"'
@@ -39,6 +49,60 @@ ssl:
 #     logroot: '/path/to/my/logs'
 # Default: 'logs' (this is relative to ServerRoot)
 #logroot: 'logs'
+
+# Error log filename
+# Example:
+#     errorlog: 'error.log'
+# Default: 'error.log' (If 'servername' and 'ssl' options are defined
+# the default value will be <servername>_error_ssl.log)
+#errorlog: 'error.log'
+
+# Access log filename
+# Example:
+#     accesslog: 'access.log'
+# Default: 'access.log' (If 'servername' and 'ssl' options are defined
+# the default value will be <servername>_access_ssl.log)
+#accesslog: 'access.log'
+
+# Apache access log format (Don't specify log nickname see: http://httpd.apache.org/docs/current/mod/mod_log_config.html#transferlog)
+# Example:
+#     logformat: '"%v %h \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\" %{SSL_PROTOCOL}x %T"'
+# Default: Apache combined format
+#logformat: Apache combine format
+
+# Should RewriteEngine be used
+# Example:
+#     use_rewrites: false
+# Default: true
+#use_rewrites: true
+
+# Should Maintenance Rewrite rules be added
+# Example:
+#   use_maintenance: false
+# Default: true
+#use_maintenance: true
+
+# List of IPs to allowed when maintenance is enabled
+# Example:
+#   maintenance_ip_allowlist:
+#     - 192.168.0..*
+#     - 192.168.1..*
+# Default: [] (no IPs allowed)
+#maintenance_ip_allowlist: []
+
+# Set Header Content-Security-Policy frame-ancestors.
+# Example:
+#   security_csp_frame_ancestors: https://ondemand.osc.edu
+# Example to disable setting:
+#   security_csp_frame_ancestors: false
+# Default: based on servername and ssl settings
+#security_csp_frame_ancestors:
+
+# Set Header Strict-Transport-Security to help enforce SSL
+# Example:
+#   security_strict_transport: false
+# Default: true when ssl is enabled, false otherwise
+#security_strict_transport: false
 
 # Root directory of the Lua handler code
 # Example:
@@ -53,11 +117,19 @@ ssl:
 # Default: 'info' (get verbose logs)
 #lua_log_level: 'info'
 
-# System command used to map authenticated-user to system-user
+# Lua regular expression used to map authenticated-user to system-user
+# This configuration is ignored if user_map_cmd is defined
 # Example:
-#     user_map_cmd: '/opt/ood/ood_auth_map/bin/ood_auth_map.regex --regex=''^(\w+)@example.com$'''
-# Default: '/opt/ood/ood_auth_map/bin/ood_auth_map.regex' (this echo's back auth-user)
-#user_map_cmd: '/opt/ood/ood_auth_map/bin/ood_auth_map.regex'
+#     user_map_match: '^([^@]+)@.*$'
+# Default: '.*'
+#user_map_match: '.*'
+
+# System command used to map authenticated-user to system-user
+# This option takes precedence over user_map_match
+# Example:
+#     user_map_cmd: '/usr/local/bin/ondemand-usermap'
+# Default: null (use user_map_match)
+#user_map_cmd: null
 
 # Use an alternative CGI environment variable instead of REMOTE_USER for
 # determining the authenticated-user fed to the mapping script
@@ -81,13 +153,17 @@ ssl:
 
 # List of Apache authentication directives
 # NB: Be sure the appropriate Apache module is installed for this
-# Default: (see below, uses basic auth with an htpasswd file)
-# auth:
-#   - 'AuthType Basic'
-#   - 'AuthName "private"'
-#   - 'AuthUserFile "/opt/rh/httpd24/root/etc/httpd/.htpasswd"'
-#   - 'RequestHeader unset Authorization'
-#   - 'Require valid-user'
+# Default: (see below, uses OIDC auth with Dex)
+#auth:
+#  - 'AuthType openid-connect'
+#  - 'Require valid-user'
+host_regex: 'head'
+auth:
+  - 'AuthType Basic'
+  - 'AuthName "Restricted Files"'
+  - 'AuthBasicProvider file'
+  - 'AuthUserFile /opt/rh/httpd24/root/etc/httpd/apache-passwords'
+  - 'Require valid-user'
 
 # Redirect user to the following URI when accessing root URI
 # Example:
@@ -157,14 +233,14 @@ ssl:
 # Example:
 #     node_uri: '/node'
 # Default: null (disable this feature)
-#node_uri: null
+node_uri: '/node'
 
 # Sub-uri used to reverse proxy to backend web server running on node that
 # ONLY uses *relative* URI paths
 # Example:
 #     rnode_uri: '/rnode'
 # Default: null (disable this feature)
-#rnode_uri: null
+rnode_uri: '/rnode'
 
 #
 # Per-user NGINX Passenger apps
@@ -196,6 +272,21 @@ ssl:
 # Default: 5 (only try 5 times)
 #pun_max_retries: 5
 
+# The PUN pre hook command to execute as root
+#
+# Example:
+#    pun_pre_hook_root_cmd: '/opt/hpc-site/ood_pun_prehook'
+# Default: null (do not run any PUN pre hook as root)
+#pun_pre_hook_root_cmd: null
+
+# Comma separated list of environment variables to pass from the apache context
+# into the PUN pre hook. Defaults to null so nothing is exported.
+#
+# Example:
+#    pun_pre_hook_exports: 'OIDC_ACCESS_TOKEN,OIDC_CLAIM_EMAIL'
+# Default: null (pass nothing)
+#pun_pre_hook_exports: null
+
 #
 # Support for OpenID Connect
 #
@@ -204,7 +295,7 @@ ssl:
 # Example:
 #     oidc_uri: '/oidc'
 # Default: null (disable OpenID Connect support)
-#oidc_uri: null
+oidc_uri: '/oidc'
 
 # Sub-uri user is redirected to if they are not authenticated. This is used to
 # *discover* what ID provider the user will login through.
@@ -240,11 +331,129 @@ ssl:
 # Default: null (display error to user if mapping fails)
 #register_root: null
 
-host_regex: 'head'
-auth:
- - 'AuthType Basic'
- - 'AuthName "Restricted Files"'
- - 'AuthBasicProvider file'
- - 'AuthDBMUserFile "/opt/rh/httpd24/root/etc/httpd/apache-passwords"'
- - 'RequestHeader unset Authorization'
- - 'Require valid-user'
+# OIDC metadata URL
+# Example:
+#     oidc_provider_metadata_url: https://example.com:5554/.well-known/openid-configuration
+# Default: null (value auto-generated if using Dex)
+#oidc_provider_metadata_url: null
+
+# OIDC client ID
+# Example:
+#     oidc_client_id: ondemand.example.com
+# Default: null (value auto-generated if using Dex)
+#oidc_client_id: null
+
+# OIDC client secret
+# Example:
+#     oidc_client_secret: 334389048b872a533002b34d73f8c29fd09efc50
+# Default: null (value auto-generated if using Dex)
+#oidc_client_secret: null
+
+# OIDC remote user claim. This is the claim that populates REMOTE_USER
+# Example:
+#     oidc_remote_user_claim: preferred_username
+# Default: preferred_username
+#oidc_remote_user_claim: preferred_username
+
+# OIDC scopes
+# Example:
+#     oidc_scope: "openid profile email groups"
+# Default: "openid profile email"
+#oidc_scope: "openid profile email"
+
+# OIDC session inactivity timeout
+# Example:
+#     oidc_session_inactivity_timeout: 28800
+# Default: 28800
+#oidc_session_inactivity_timeout: 28800
+
+# OIDC session max duration
+# Example:
+#     oidc_session_max_duration: 28800
+# Default: 28800
+#oidc_session_max_duration: 28800
+
+# OIDC max number of state cookies and if to automatically clean old cookies
+# Example:
+#     oidc_state_max_number_of_cookies: "10 true"
+# Default: "10 true"
+#oidc_state_max_number_of_cookies: "10 true"
+
+# OIDC Enable SameSite cookie
+# When ssl is defined this defaults to 'Off'
+# When ssl is not defined this defaults to 'On'
+# Example:
+#     oidc_cookie_same_site: 'Off'
+# Default: 'On'
+#oidc_cookie_same_site: 'On'
+
+# Additional OIDC settings as key-value pairs
+# Example:
+#     oidc_settings:
+#       OIDCPassIDTokenAs: serialized
+#       OIDCPassRefreshToken: On
+# Default: {} (empty hash)
+#oidc_settings: {}
+
+# The Dex URI behind Apache reverse proxy
+# Set to false or null to disable Dex behing the Apache reverse proxy
+# Example:
+#   dex_uri: /auth
+# Default: /dex
+#dex_uri: /dex
+
+# Dex configurations, values inside the "dex" structure are directly used to configure Dex
+# If the value for "dex" key is false or null, Dex support is disabled
+# Dex support will auto-enable if ondemand-dex package is installed
+#dex:
+  # Default based on if ssl key for ood-portal-generator is defined
+#  ssl: false
+  # Only used if SSL is disabled
+#  http_port: "5556"
+  # Only used if SSL is enabled
+#  https_port: "5554"
+  # tls_cert and tls_key take OnDemand configured values for ssl and copy keys to /etc/ood/dex maintaining file names
+#  tls_cert: null
+#  tls_key: null
+#  storage_file: /etc/ood/dex/dex.db
+#  grpc: null
+#  expiry: null
+  # Client ID, defaults to servername or FQDN
+#  client_id: null
+#  client_name: OnDemand
+  # Client secret, value auto generated
+  # A value that is a filesystem path can be used to store secret in a file
+#  client_secret: /etc/ood/dex/ondemand.secret
+   # The OnDemand redirectURI is auto-generated, this option allows adding additional URIs
+#  client_redirect_uris: []
+  # Additional Dex OIDC clients to configure
+#  static_clients: []
+  # The following example is to configure OpenLDAP
+  # Docs: https://github.com/dexidp/dex/blob/master/Documentation/connectors/ldap.md
+#  connectors:
+#    - type: ldap
+#      id: ldap
+#      name: LDAP
+#      config:
+#        host: openldap.my_center.edu:636
+#        insecureSkipVerify: false
+#        bindDN: cn=admin,dc=example,dc=org
+#        bindPW: admin
+#        userSearch:
+#          baseDN: ou=People,dc=example,dc=org
+#          filter: "(objectClass=posixAccount)"
+#          username: uid
+#          idAttr: uid
+#          emailAttr: mail
+#          nameAttr: gecos
+#          preferredUsernameAttr: uid
+#        groupSearch:
+#          baseDN: ou=Groups,dc=example,dc=org
+#          filter: "(objectClass=posixGroup)"
+#          userMatchers:
+#            - userAttr: DN
+#              groupAttr: member
+#          nameAttr: cn
+#  frontend:
+#    theme: ondemand
+#    dir: /usr/share/ondemand-dex/web
