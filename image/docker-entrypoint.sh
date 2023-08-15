@@ -95,6 +95,7 @@ then
         echo "ssh keys already found"
     else
             ssh-keygen -t rsa -f /home/rocky/.ssh/id_rsa -N ""
+            chown rocky:rocky /home/rocky/.ssh/id_rsa /home/rocky/.ssh/id_rsa.pub
     fi
 
     echo "---> Setting permissions for user home directories"
@@ -132,7 +133,7 @@ then
     /opt/ood/ood-portal-generator/sbin/update_ood_portal
     mkdir --parents /opt/rh/httpd24/root/etc/httpd/
 
-    /usr/bin/htdbm -cb /opt/rh/httpd24/root/etc/httpd/.htpasswd.dbm rocky $ROCKY_OOD_PASS
+    /usr/bin/htpasswd -cb /opt/rh/httpd24/root/etc/httpd/apache-passwords rocky $ROCKY_OOD_PASS
     /usr/sbin/httpd -k start -X -e debug
 
 elif [ "$1" = "check-queue-hook" ]

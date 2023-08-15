@@ -243,8 +243,8 @@ ssl:
 host_regex: 'head'
 auth:
  - 'AuthType Basic'
- - 'AuthName "private"'
- - 'AuthBasicProvider dbm'
- - 'AuthDBMUserFile "/opt/rh/httpd24/root/etc/httpd/.htpasswd.dbm"'
+ - 'AuthName "Restricted Files"'
+ - 'AuthBasicProvider file'
+ - 'AuthDBMUserFile "/opt/rh/httpd24/root/etc/httpd/apache-passwords"'
  - 'RequestHeader unset Authorization'
  - 'Require valid-user'
