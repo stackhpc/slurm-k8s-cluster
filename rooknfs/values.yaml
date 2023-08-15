@@ -1,8 +1,3 @@
-# Global flag for enabling/disabling all chart resources
-# This is useful for allowing charts which use this chart
-# as a dependency to toggle usage of this chart based on
-# values in the parent chart
-enabled: true
 
 # Name for the NFSServer resource created by rook
 serverName: rook-nfs
