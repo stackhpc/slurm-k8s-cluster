@@ -138,6 +138,16 @@ entries:
     version: 0.1.0-dev.0.azimuth-test-deploy.295
   slurm-cluster-chart:
   - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2023-08-15T10:06:06.149796343Z"
+    description: A Helm chart for Kubernetes
+    digest: b299347695eb7bf9e30c69446db3465384b41bce3fe0abd6da427de34c716764
+    name: slurm-cluster-chart
+    type: application
+    urls:
+    - https://github.com/stackhpc/slurm-docker-cluster/releases/download/slurm-cluster-chart-0.1.0/slurm-cluster-chart-0.1.0.tgz
+    version: 0.1.0
+  - apiVersion: v2
     appVersion: 8d6cc56
     created: "2023-08-14T16:07:18.856037072Z"
     description: A Helm chart for Kubernetes
@@ -348,4 +358,4 @@ entries:
     urls:
     - slurm-cluster-chart-0.1.0-dev.0.azimuth-helm.285.tgz
     version: 0.1.0-dev.0.azimuth-helm.285
-generated: "2023-08-14T16:07:18.825751683Z"
+generated: "2023-08-15T10:06:06.150285547Z"
