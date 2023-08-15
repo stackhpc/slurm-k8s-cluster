@@ -8,6 +8,9 @@ storageClassName: rook-nfs
 # Name for the Read-Write-Once backing PVC created by Rook
 claimName: rook-nfs-backing-pv
 
+# Storage class to use for the Read-Write-Once backing PVC
+backingStorageClass:
+
 # Name for the NFS share within the NFS Resource instance
 shareName: share-1
 

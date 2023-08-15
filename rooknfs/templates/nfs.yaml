@@ -6,6 +6,7 @@ metadata:
   name: {{ .Values.claimName}}
   namespace: {{ .Values.serverNamespace }}
 spec:
+  storageClassName: {{ .Values.backingStorageClass }}
   accessModes:
   - ReadWriteMany
   resources:

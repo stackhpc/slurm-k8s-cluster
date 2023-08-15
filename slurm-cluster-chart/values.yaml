@@ -36,7 +36,9 @@ storage:
 # See rook-nfs sub-chart for full set of available config values
 rooknfs:
   enabled: true
-  storageClassName: slurm-rook-nfs # NB this must match storage.storageClassName when using rook
+  # Name given to the RWM StorageClass created by Rook
+  # NB this must match storage.storageClassName when using Rook
+  storageClassName: slurm-rook-nfs
   # Name for the NFSServer resource created by Rook
   serverName: rook-nfs
   # Capacity for the backing Read-Write-*Once* volume 
@@ -46,6 +48,9 @@ rooknfs:
   # this value to the requested storage capacity for the RWM
   # volume specified in storage.capacity
   storageCapacity: *capacity
+  # Storage class to use for the Read-Write-Once backing PVC
+  # backingStorageClass: 
+
 
 
 sqlImage: mariadb:10.10
