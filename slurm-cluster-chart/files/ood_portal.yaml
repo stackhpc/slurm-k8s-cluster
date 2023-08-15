@@ -160,9 +160,9 @@ ssl:
 host_regex: 'head'
 auth:
   - 'AuthType Basic'
-  - 'AuthName "Restricted Files"'
-  - 'AuthBasicProvider file'
-  - 'AuthUserFile /opt/rh/httpd24/root/etc/httpd/apache-passwords'
+  - 'AuthName "Open OnDemand"'
+  - 'AuthBasicProvider PAM'
+  - 'AuthPAMService ood'
   - 'Require valid-user'
 
 # Redirect user to the following URI when accessing root URI
