@@ -38,7 +38,7 @@ All config files in `slurm-cluster-chart/files` will be mounted into the contain
 
 On initial deployment ONLY, run
 ```console
-./generate-secrets.sh <target-namespace>
+./generate-secrets.sh [<target-namespace>]
 ```
 This generates a set of secrets in the target namespace to be used by the Slurm cluster. If these need to be regenerated, see "Reconfiguring the Cluster"
 
@@ -55,7 +55,7 @@ See the separate RookNFS chart [values.yaml](./rooknfs/values.yaml) for further 
 To access the cluster via `ssh`, you will need to make your public keys available. All your public keys from localhost can be added by running
 
 ```console
-./publish-keys.sh <target-namespace>
+./publish-keys.sh [<target-namespace>]
 ```
 where `<target-namespace>` is the namespace in which the Slurm cluster chart will be deployed (i.e. using `helm install -n <target-namespace> ...`). This will create a Kubernetes Secret in the appropriate namespace for the Slurm cluster to use. Omitting the namespace arg will install the secrets in the default namespace.
 
