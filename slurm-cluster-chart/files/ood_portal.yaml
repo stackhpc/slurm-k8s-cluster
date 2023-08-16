@@ -157,7 +157,7 @@ ssl:
 #auth:
 #  - 'AuthType openid-connect'
 #  - 'Require valid-user'
-host_regex: 'head'
+#host_regex: 'head'
 auth:
   - 'AuthType Basic'
   - 'AuthName "Open OnDemand"'
@@ -295,7 +295,7 @@ rnode_uri: '/rnode'
 # Example:
 #     oidc_uri: '/oidc'
 # Default: null (disable OpenID Connect support)
-oidc_uri: '/oidc'
+# oidc_uri: '/oidc'
 
 # Sub-uri user is redirected to if they are not authenticated. This is used to
 # *discover* what ID provider the user will login through.
