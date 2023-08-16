@@ -11,11 +11,11 @@ spec:
     - name: ssh
       port: 22
       targetPort: 22
-    - name: "apache"
+    - name: apache
       port: 80
       targetPort: 80
       protocol: TCP
-    - name: "https"
+    - name: https
       port: 443
       targetPort: 443
       protocol: TCP
