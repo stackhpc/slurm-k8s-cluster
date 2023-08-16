@@ -28,3 +28,4 @@ dependencies:
   - name: rooknfs
     version: ">=0-0"
     repository: file://../rooknfs
+    condition: rooknfs.enabled

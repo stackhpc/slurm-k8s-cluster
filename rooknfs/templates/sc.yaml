@@ -1,4 +1,3 @@
-{{- if .Values.enabled }}
 ---
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -14,4 +13,3 @@ provisioner: nfs.rook.io/rook-nfs-provisioner
 reclaimPolicy: Delete
 volumeBindingMode: Immediate
 ---
-{{- end }}

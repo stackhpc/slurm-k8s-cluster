@@ -1,8 +1,3 @@
-# Global flag for enabling/disabling all chart resources
-# This is useful for allowing charts which use this chart
-# as a dependency to toggle usage of this chart based on
-# values in the parent chart
-enabled: true
 
 # Name for the NFSServer resource created by rook
 serverName: rook-nfs
@@ -12,6 +7,9 @@ storageClassName: rook-nfs
 
 # Name for the Read-Write-Once backing PVC created by Rook
 claimName: rook-nfs-backing-pv
+
+# Storage class to use for the Read-Write-Once backing PVC
+backingStorageClass:
 
 # Name for the NFS share within the NFS Resource instance
 shareName: share-1

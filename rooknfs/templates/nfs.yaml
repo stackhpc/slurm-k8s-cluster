@@ -4,9 +4,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Values.claimName}}
+  name: {{ .Values.claimName }}
   namespace: {{ .Values.serverNamespace }}
 spec:
+  {{- if .Values.backingStorageClass }}
+  storageClassName: {{ .Values.backingStorageClass }}
+  {{- end }}
   accessModes:
   - ReadWriteMany
   resources:
@@ -32,5 +35,3 @@ spec:
   annotations:
     rook: nfs
 ---
-{{- end }}
-
