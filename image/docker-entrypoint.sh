@@ -134,7 +134,7 @@ then
     /usr/libexec/httpd-ssl-gencerts
 
     echo "LoadModule authnz_pam_module modules/mod_authnz_pam.so" > /etc/httpd/conf.modules.d/55-authnz_pam.conf
-    cp /etc/pam.d/sshd /etc/pam.d/ood
+    cp /etc/pam.d/password-auth /etc/pam.d/ood
     chmod 640 /etc/shadow
     chgrp apache /etc/shadow
 
