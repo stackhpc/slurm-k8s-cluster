@@ -1,4 +1,4 @@
-slurmImage: ghcr.io/stackhpc/slurm-docker-cluster:7c0e2d9
+slurmImage: ghcr.io/stackhpc/slurm-docker-cluster:d3daba4
 
 login:
   # Deployment resource name
@@ -53,17 +53,27 @@ rooknfs:
 
 
 
-sqlImage: mariadb:10.10
+# Values for Slurm's database container
+database:
+  #Database image to be used
+  image: mariadb:10.10
+  #Storage requested by the var-lib-mysql volume backing the database
+  storage: 100Mi
 
-databaseStorage: 100Mi
-
+# Configmap resource names
 configmaps:
-  authorizedKeys: authorized-keys-configmap
   slurmConf: slurm-conf-configmap
   slurmdbdConf: slurmdbd-conf-configmap
   sshdConfig: sshd-config-configmap
 
+# Public key used for ssh access to the login node
+# If let undefined, assumes you have run the provided publish-keys.sh script to publish your public key prior to deployment
+sshPublicKey:
+
+# Secret resource names
 secrets:
-  databaseAuth: database-auth-secret
   mungeKey: munge-key-secret
-  
+
+openOnDemand:
+  #Password for default Open OnDemand user 'rocky'
+  password: password

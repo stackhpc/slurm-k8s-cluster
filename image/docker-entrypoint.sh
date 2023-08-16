@@ -150,6 +150,18 @@ then
             exit 1
     fi
 
+elif [ "$1" = "generate-keys-hook" ]
+then
+    mkdir -p ./temphostkeys/etc/ssh
+    ssh-keygen -A -f ./temphostkeys
+    kubectl create secret generic host-keys-secret \
+    --dry-run=client \
+    --from-file=./temphostkeys/etc/ssh \
+    -o yaml | \
+    kubectl apply -f -
+    
+    exit 0
+    
 elif [ "$1" = "debug" ]
 then
     start_munge --foreground
