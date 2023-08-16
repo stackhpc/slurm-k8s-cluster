@@ -7,12 +7,19 @@
             "properties": {
                 "capacity": {
                     "type": "string",
-                    "title": "Shared cluster storage",
+                    "title": "Shared Cluster Storage",
                     "description": "The capacity of the storage volume shared across the Slurm cluster nodes. \nThis is dynamically allocated from the tenancy quota.",
                     "pattern": "^[1-9][0-9]*Gi$",
                     "default": "10Gi"                
                 }
-            }
+            },
+            "required": ["capacity"]
+        },
+        "sshPublicKey": {
+            "type": "string",
+            "title": "SSH Public Key",
+            "description": "The SSH public key to inject into the cluster's login node"    
         }
-    }
+    },
+    "required": ["storage", "sshPublicKey"]
 }
