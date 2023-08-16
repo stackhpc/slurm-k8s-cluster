@@ -26,7 +26,7 @@ The Helm chart will create the following named volumes:
 
 * var_lib_mysql     ( -> /var/lib/mysql )
 
-A named ReadWriteMany (RWX) volume mounted to `/home` is also expected, this can be external or can be deployed using the provided `rooknfs` chart directory (See "Deploying the Cluster")
+A named ReadWriteMany (RWX) volume mounted to `/home` is also expected, this can be external or can be deployed using the provided `rooknfs` chart directory (See "Deploying the Cluster").
 
 ## Configuring the Cluster
 
