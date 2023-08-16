@@ -19,7 +19,8 @@ jobs:
         uses: stackhpc/github-actions/semver@master
 
       - name: Publish Helm charts
-        uses: stackhpc/github-actions/helm-publish@master
+        # uses: stackhpc/github-actions/helm-publish@master
+        uses: stackhpc/github-actions/helm-publish@test/capture-stderr
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           version: ${{ steps.semver.outputs.version }}
