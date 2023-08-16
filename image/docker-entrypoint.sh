@@ -77,6 +77,11 @@ then
     done
     echo "-- slurmctld is now active ..."
 
+    echo "---> Adding myself to node definitions ..."
+    SLURMD_CONFIG=$(slurmd -C | head --lines 1)
+    echo ${SLURMD_CONFIG}
+    scontrol create ${SLURMD_CONFIG} State=FUTURE
+
     echo "---> Starting the Slurm Node Daemon (slurmd) ..."
     exec /usr/sbin/slurmd -D "${@:2}"
 
