@@ -1,5 +1,17 @@
 {
     "$schema": "http://json-schema.org/schema#",
     "type": "object",
-    "properties": {}
+    "properties": {
+        "storage": {
+            "type": "object",
+            "properties": {
+                "capacity": {
+                    "type": "string",
+                    "title": "Shared cluster storage",
+                    "description": "The capacity of the storage volume shared across the Slurm cluster nodes. \nThis is dynamically allocated from the tenancy quota.",
+                    "pattern": "^[1-9][0-9]*Gi$",
+                    "default": "10Gi"                }
+            },
+        }
+    }
 }

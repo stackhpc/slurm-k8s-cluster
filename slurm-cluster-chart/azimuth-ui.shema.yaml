@@ -1,0 +1,8 @@
+controls:
+  # Render fields with units controls
+  /storage/capacity:
+    type: NumberWithUnitsControl
+    units: Gi
+    minimum: 1
+    step: 1
+    displayUnits: GB
