@@ -1,4 +1,3 @@
-{{- if .Values.enabled }}
 ---
 # A default storageclass must be present
 apiVersion: v1
