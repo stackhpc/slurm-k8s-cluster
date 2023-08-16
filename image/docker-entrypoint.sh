@@ -141,6 +141,8 @@ then
     mkdir --parents /opt/rh/httpd24/root/etc/httpd/
     /usr/bin/htpasswd -cb /opt/rh/httpd24/root/etc/httpd/apache-passwords rocky $ROCKY_OOD_PASS
 
+    echo "config.hosts = nil" >> /var/www/ood/apps/sys/dashboard/config/environments/production.rb
+
     /opt/ood/ood-portal-generator/sbin/update_ood_portal
     
     /usr/sbin/httpd -k start -X -e debug
