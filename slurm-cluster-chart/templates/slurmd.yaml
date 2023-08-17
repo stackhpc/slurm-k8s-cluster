@@ -25,6 +25,13 @@ spec:
             - slurmd
             - -F
             - -vvv
+            - -N
+            - "$(POD_NAME)"
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
           image: {{ .Values.slurmImage }}
           name: slurmd
           ports:
@@ -41,6 +48,8 @@ spec:
               subPath: munge.key
           securityContext:
             privileged: true
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
       dnsConfig:
         searches:
           - slurmd.{{ .Release.Namespace }}.svc.cluster.local
