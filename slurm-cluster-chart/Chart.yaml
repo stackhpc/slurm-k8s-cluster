@@ -1,7 +1,8 @@
 apiVersion: v2
 name: slurm-cluster-chart
 description: A Slurm cluster running on Kubernetes
-icon: https://raw.githubusercontent.com/stackhpc/slurm-docker-cluster/main/slurm-cluster-chart/files/slurm-on-k8s.svg
+#TODO: Change this URL to main branch!
+icon: https://raw.githubusercontent.com/stackhpc/slurm-docker-cluster/azimuth-test-deploy/slurm-cluster-chart/files/slurm-on-k8s.svg
 
 # A chart can be either an 'application' or a 'library' chart.
 #
