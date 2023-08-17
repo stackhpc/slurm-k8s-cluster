@@ -9,6 +9,8 @@ LABEL org.opencontainers.image.source="https://github.com/stackhpc/slurm-docker-
 ARG SLURM_TAG=slurm-23.02
 ARG GOSU_VERSION=1.11
 
+COPY kubernetes.repo /etc/yum.repos.d/kubernetes.repo
+
 RUN set -ex \
     && yum makecache \
     && yum -y update \
@@ -42,6 +44,7 @@ RUN set -ex \
        hwloc-devel \
        openssh-server \
        apptainer \
+       kubectl \
     && yum clean all \
     && rm -rf /var/cache/yum
 
@@ -90,9 +93,6 @@ RUN mkdir /etc/sysconfig/slurm \
     && chown -R slurm:slurm /var/*/slurm* \
     && useradd -u 1000 rocky \
     && usermod -p '*' rocky # unlocks account but sets no password
-
-COPY kubernetes.repo /etc/yum.repos.d/kubernetes.repo
-RUN dnf install -y kubectl
 
 VOLUME /etc/slurm
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh

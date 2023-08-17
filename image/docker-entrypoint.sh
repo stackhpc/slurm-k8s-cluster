@@ -51,10 +51,6 @@ then
     echo "---> Setting ownership for state directory ..."
     chown slurm:slurm /var/spool/slurmctld
 
-    echo "---> Copying Kubeconfig ..."
-    install -o slurm -g slurm -m u=rwX,go= -d /var/lib/slurmctld/
-    install -o slurm -g slurm -m u=r,go= /tmp/kubeconfig /var/lib/slurmctld/
-
     echo "---> Starting the Slurm Controller Daemon (slurmctld) ..."
     if /usr/sbin/slurmctld -V | grep -q '17.02' ; then
         exec gosu slurm /usr/sbin/slurmctld -D "${@:2}"
