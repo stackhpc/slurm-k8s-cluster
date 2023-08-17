@@ -1,4 +1,5 @@
 #!/usr/bin/bash
+set -euo pipefail
 
 echo "$(date) Suspend invoked $0 $*" >> /var/log/slurm/power_save.log
 
