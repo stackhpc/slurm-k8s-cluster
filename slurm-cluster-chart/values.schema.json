@@ -19,7 +19,18 @@
             "type": "string",
             "title": "SSH Public Key",
             "description": "The SSH public key to inject into the cluster's login node"    
+        },
+        "openOnDemand": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "title": "Open On Demand password",
+                    "description": "The password for access to the Open On Demand web interface"    
+                }
+            },
+            "required": ["password"]
         }
     },
-    "required": ["storage", "sshPublicKey"]
+    "required": ["storage", "sshPublicKey", "openOnDemand"]
 }
