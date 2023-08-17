@@ -21,3 +21,6 @@
 .idea/
 *.tmproj
 .vscode/
+
+# Repo-specifics
+slurm-cluster-chart/files/slurm-on-k8s.svg

@@ -1,7 +1,7 @@
 apiVersion: v2
 name: slurm-cluster-chart
-description: A Helm chart for deploying Slurm on Kubernetes
-icon: https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Slurm_logo.svg/158px-Slurm_logo.svg.png
+description: A Slurm cluster running on Kubernetes
+icon: https://raw.githubusercontent.com/stackhpc/slurm-docker-cluster/main/slurm-cluster-chart/files/slurm-on-k8s.svg
 
 # A chart can be either an 'application' or a 'library' chart.
 #
@@ -29,3 +29,6 @@ dependencies:
     version: ">=0-0"
     repository: file://../rooknfs
     condition: rooknfs.enabled
+
+annotations:
+  azimuth.stackhpc.com/label: Slurm on Kubernetes
