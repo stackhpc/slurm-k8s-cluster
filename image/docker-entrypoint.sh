@@ -78,8 +78,8 @@ then
     echo "-- slurmctld is now active ..."
 
     echo "---> Updating node definitions ..."
-    scontrol delete node=$HOSTNAME
-    scontrol create $(slurmd -C | head -n1) State=FUTURE
+    scontrol delete node=${POD_NAME}
+    scontrol create NodeName=${POD_NAME} $(slurmd -C | head -n1 | cut -d ' ' -f 2-) State=FUTURE
 
     echo "---> Starting the Slurm Node Daemon (slurmd) ..."
     exec /usr/sbin/slurmd -D "${@:2}"
