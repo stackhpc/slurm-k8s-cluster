@@ -3,13 +3,13 @@ set -euo pipefail
 
 echo "$(date) Resume invoked $0 $*" >> /var/log/slurm/power_save.log
 
-echo "Arguments: $* $0 $1"
+echo "Arguments: $* $0 $1" >> /var/log/slurm/power_save.log
 
 hosts=$(scontrol show hostnames $1) # this is purely a textual expansion, doens't depend on defined nodes
-echo "Powering up hosts: $hosts"
+echo "Powering up hosts: $hosts" >> /var/log/slurm/power_save.log
 for host in $hosts
 do
-   echo "Creating $host"
+   echo "Creating $host" >> /var/log/slurm/power_save.log
    sed s/SLURMD_NODENAME/$host/ /etc/slurm/slurmd-pod-template.yml | kubectl create -f -
-   echo "done"
+   echo "done" >> /var/log/slurm/power_save.log
 done
