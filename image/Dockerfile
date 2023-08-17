@@ -9,6 +9,8 @@ LABEL org.opencontainers.image.source="https://github.com/stackhpc/slurm-docker-
 ARG SLURM_TAG=slurm-23.02
 ARG GOSU_VERSION=1.11
 
+COPY kubernetes.repo /etc/yum.repos.d/kubernetes.repo
+
 RUN set -ex \
     && yum makecache \
     && yum -y update \
@@ -46,6 +48,7 @@ RUN set -ex \
        openssh-server \
        apptainer \
        ondemand \
+       kubectl \
     && yum clean all \
     && rm -rf /var/cache/yum
 

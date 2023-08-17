@@ -28,10 +28,7 @@ spec:
           name: login
           env:
             - name: ROCKY_OOD_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: htdbm-secret
-                  key: password
+              value: {{ .Values.openOnDemand.password }}
             - name: JUPYTER_REPO
               value: {{ .Values.jupyterApp.repoURL }}
             - name: JUPYTER_TAG
@@ -87,7 +84,11 @@ spec:
             defaultMode: 0400
         - name: authorized-keys
           configMap:
-            name: {{ .Values.configmaps.authorizedKeys }}
+            {{ if .Values.sshPublicKey }}
+            name: helm-authorized-keys-configmap
+            {{ else }}
+            name: authorized-keys-configmap
+            {{ end }}
         - name: cluster-config
           configMap:
             name: cluster-config
