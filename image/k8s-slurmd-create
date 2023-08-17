@@ -10,6 +10,9 @@ echo "Powering up hosts: $hosts" >> /var/log/slurm/power_save.log
 for host in $hosts
 do
    echo "Creating $host" >> /var/log/slurm/power_save.log
-   sed s/SLURMD_NODENAME/$host/ /etc/slurm/slurmd-pod-template.yml | tee /dev/tty | kubectl create -f - | tee /dev/tty
+   touch tmpfile.yml
+   sed s/SLURMD_NODENAME/$host/ /etc/slurm/slurmd-pod-template.yml > tmpfile.yml
+   echo "sed successful" >> /var/log/slurm/power_save.log
+   kubectl create -f tmpfile.yml &> /var/log/slurm/power_save.log
    echo "done" >> /var/log/slurm/power_save.log
 done
