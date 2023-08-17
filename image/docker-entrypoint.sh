@@ -1,21 +1,24 @@
 #!/bin/bash
 set -euo pipefail
 
-chown root:root /home
-chmod 755 /home
+function start_munge(){
 
-cp /tempmounts/munge.key /etc/munge/munge.key
-chown munge:munge /etc/munge/munge.key
-chmod 600 /etc/munge/munge.key
+    echo "---> Copying MUNGE key ..."
+    cp /tmp/munge.key /etc/munge/munge.key
+    chown munge:munge /etc/munge/munge.key
+
+    echo "---> Starting the MUNGE Authentication service (munged) ..."
+    gosu munge /usr/sbin/munged "$@"
+}
 
 if [ "$1" = "slurmdbd" ]
 then
-    echo "---> Starting the MUNGE Authentication service (munged) ..."
-    gosu munge /usr/sbin/munged
+
+    start_munge
 
     echo "---> Starting the Slurm Database Daemon (slurmdbd) ..."
 
-    cp /tempmounts/slurmdbd.conf /etc/slurm/slurmdbd.conf
+    cp /tmp/slurmdbd.conf /etc/slurm/slurmdbd.conf
     echo "StoragePass=${StoragePass}" >> /etc/slurm/slurmdbd.conf
     chown slurm:slurm /etc/slurm/slurmdbd.conf
     chmod 600 /etc/slurm/slurmdbd.conf
@@ -29,13 +32,12 @@ then
     }
     echo "-- Database is now active ..."
 
-    exec gosu slurm /usr/sbin/slurmdbd -Dvvv
-fi
+    exec gosu slurm /usr/sbin/slurmdbd -D "${@:2}"
 
-if [ "$1" = "slurmctld" ]
+elif [ "$1" = "slurmctld" ]
 then
-    echo "---> Starting the MUNGE Authentication service (munged) ..."
-    gosu munge /usr/sbin/munged
+
+    start_munge
 
     echo "---> Waiting for slurmdbd to become active before starting slurmctld ..."
 
@@ -51,13 +53,12 @@ then
 
     echo "---> Starting the Slurm Controller Daemon (slurmctld) ..."
     if /usr/sbin/slurmctld -V | grep -q '17.02' ; then
-        exec gosu slurm /usr/sbin/slurmctld -Dvvv
+        exec gosu slurm /usr/sbin/slurmctld -D "${@:2}"
     else
-        exec gosu slurm /usr/sbin/slurmctld -i -Dvvv
+        exec gosu slurm /usr/sbin/slurmctld -i -D "${@:2}"
     fi
-fi
 
-if [ "$1" = "slurmd" ]
+elif [ "$1" = "slurmd" ]
 then
     echo "---> Set shell resource limits ..."
     ulimit -l unlimited
@@ -65,8 +66,7 @@ then
     ulimit -n 131072
     ulimit -a
 
-    echo "---> Starting the MUNGE Authentication service (munged) ..."
-    gosu munge /usr/sbin/munged
+    start_munge
 
     echo "---> Waiting for slurmctld to become active before starting slurmd..."
 
@@ -78,31 +78,31 @@ then
     echo "-- slurmctld is now active ..."
 
     echo "---> Starting the Slurm Node Daemon (slurmd) ..."
-    exec /usr/sbin/slurmd -F -Dvvv
-fi
+    exec /usr/sbin/slurmd -D "${@:2}"
 
-if [ "$1" = "login" ]
+elif [ "$1" = "login" ]
 then
     
-    echo "---> Setting up ssh for user"
-    mkdir -p /home/rocky/.ssh
-    cp tempmounts/authorized_keys /home/rocky/.ssh/authorized_keys
+    chown root:root /home
+    chmod 755 /home
 
-    if [ -f /home/rocky/.ssh/id_rsa.pub ]; then
-        echo "ssh keys already found"
-    else
-            ssh-keygen -t rsa -f /home/rocky/.ssh/id_rsa -N ""
-    fi
+    echo "---> Setting up ssh for user"
+
+    mkdir -p /home/rocky/.ssh
+    cp /tmp/authorized_keys /home/rocky/.ssh/authorized_keys
 
     echo "---> Setting permissions for user home directories"
-    cd /home
-    for DIR in */;
-    do USER_TO_SET=$( echo $DIR | sed "s/.$//" ) && (chown -R $USER_TO_SET:$USER_TO_SET $USER_TO_SET || echo "Failed to take ownership of $USER_TO_SET") \
-     && (chmod 700 /home/$USER_TO_SET/.ssh || echo "Couldn't set permissions for .ssh directory for $USER_TO_SET") \
-     && (chmod 600 /home/$USER_TO_SET/.ssh/authorized_keys || echo "Couldn't set permissions for .ssh/authorized_keys for $USER_TO_SET");
+    pushd /home > /dev/null
+    for DIR in *
+        do
+        chown -R $DIR:$DIR $DIR || echo "Failed to change ownership of $DIR"
+        chmod 700 $DIR/.ssh || echo "Couldn't set permissions for .ssh/ directory of $DIR"
+        chmod 600 $DIR/.ssh/authorized_keys || echo "Couldn't set permissions for .ssh/authorized_keys for $DIR"
     done
+    popd > /dev/null
+
     echo "---> Complete"
-    echo "Starting sshd"
+    echo "---> Starting sshd"
     cp /tempmounts/etc/ssh/* /etc/ssh/
     chmod 600 /etc/ssh/ssh_host_dsa_key
     chmod 600 /etc/ssh/ssh_host_ecdsa_key
@@ -110,19 +110,25 @@ then
     chmod 600 /etc/ssh/ssh_host_rsa_key
     /usr/sbin/sshd
 
-    echo "---> Starting the MUNGE Authentication service (munged) ..."
-    gosu munge /usr/sbin/munged
-    echo "---> MUNGE Complete"
+    start_munge
 
     echo "---> Setting up self ssh capabilities for OOD"
+
+    if [ -f /home/rocky/.ssh/id_rsa.pub ]; then
+        echo "ssh keys already found"
+    else
+            ssh-keygen -t rsa -f /home/rocky/.ssh/id_rsa -N ""
+            chown rocky:rocky /home/rocky/.ssh/id_rsa /home/rocky/.ssh/id_rsa.pub
+    fi
+
     ssh-keyscan localhost > /etc/ssh/ssh_known_hosts
     echo "" >> /home/rocky/.ssh/authorized_keys #Adding newline to avoid breaking authorized_keys file
     cat /home/rocky/.ssh/id_rsa.pub >> /home/rocky/.ssh/authorized_keys
 
     echo "---> Setting up Apache Server"
 
-    mkdir --parents /etc/ood/config/apps/shell
-    env > /etc/ood/config/apps/shell/env
+    # mkdir --parents /etc/ood/config/apps/shell
+    # env > /etc/ood/config/apps/shell/env
 
     /usr/libexec/httpd-ssl-gencerts
     /opt/ood/ood-portal-generator/sbin/update_ood_portal
@@ -136,13 +142,10 @@ then
 
     echo "---> Starting Apache server"
     /usr/sbin/httpd -k start -X -e debug
-fi
 
-if [ "$1" = "check-queue-hook" ]
+elif [ "$1" = "check-queue-hook" ]
 then
-    echo "---> Starting the MUNGE Authentication service (munged) ..."
-    gosu munge /usr/sbin/munged
-    echo "---> MUNGE Complete"
+    start_munge
 
     RUNNING_JOBS=$(squeue --states=RUNNING,COMPLETING,CONFIGURING,RESIZING,SIGNALING,STAGE_OUT,STOPPED,SUSPENDED --noheader --array | wc --lines)
 
@@ -152,6 +155,11 @@ then
     else
             exit 1
     fi
-fi
 
-exec "$@"
+elif [ "$1" = "debug" ]
+then
+    start_munge --foreground
+
+else
+    exec "$@"
+fi
