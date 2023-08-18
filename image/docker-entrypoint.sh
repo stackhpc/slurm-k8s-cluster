@@ -66,6 +66,9 @@ then
     ulimit -n 131072
     ulimit -a
 
+    # Exposes for https://github.com/stackhpc/bc_containerised_jupyter/tree/v0.1.1
+    echo "POD_NAME=$POD_NAME" >> /etc/environment
+
     start_munge
 
     echo "---> Waiting for slurmctld to become active before starting slurmd..."
