@@ -1,19 +1,18 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   creationTimestamp: null
   labels:
     app.kubernetes.io/name: slurm
     app.kubernetes.io/component: slurmd
-  name: slurmd
+  name: {{ .Values.slurmd.name }}
 spec:
-  replicas: {{ .Values.replicas.slurmd }}
+  replicas: {{ .Values.slurmd.replicas }}
   selector:
     matchLabels:
       app.kubernetes.io/name: slurm
       app.kubernetes.io/component: slurmd
-  strategy:
-    type: Recreate
+  serviceName: slurmd
   template:
     metadata:
       creationTimestamp: null
@@ -21,41 +20,48 @@ spec:
         app.kubernetes.io/name: slurm
         app.kubernetes.io/component: slurmd
     spec:
-      topologySpreadConstraints:
-        - maxSkew: 1
-          whenUnsatisfiable: ScheduleAnyway
-          topologyKey: kubernetes.io/hostname
-          labelSelector:
-            matchLabels:
-              app.kubernetes.io/name: slurm
-              app.kubernetes.io/component: slurmd
       containers:
         - args:
             - slurmd
-          image: {{ .Values.sdcImage }}
+            - -F
+            - -vvv
+            - -N
+            - "$(POD_NAME)"
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          image: {{ .Values.slurmImage }}
           name: slurmd
           ports:
             - containerPort: 6818
+              hostPort:  6818
           resources: {}
           volumeMounts:
-            - mountPath: /etc/slurm/slurm.conf
+            - mountPath: /etc/slurm/
               name: slurm-config-volume
-              subPath: slurm.conf
-            - mountPath: {{ .Values.nfs.mountPath }}
+            - mountPath: {{ .Values.storage.mountPath }}
               name: slurm-jobdir
-            - mountPath: /tempmounts/munge.key
+            - mountPath: /tmp/munge.key
               name: munge-key-secret
               subPath: munge.key
           securityContext:
             privileged: true
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      dnsConfig:
+        searches:
+          - slurmd.{{ .Release.Namespace }}.svc.cluster.local
       restartPolicy: Always
       volumes:
         - name: slurm-jobdir
           persistentVolumeClaim:
-            claimName: {{ .Values.nfs.claimName }}
+            claimName: {{ .Values.storage.claimName }}
         - name: slurm-config-volume
           configMap:
             name: {{ .Values.configmaps.slurmConf }}
         - name: munge-key-secret
           secret:
             secretName: {{ .Values.secrets.mungeKey }}
+            defaultMode: 0400

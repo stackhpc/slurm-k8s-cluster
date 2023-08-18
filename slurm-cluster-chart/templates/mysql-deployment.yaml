@@ -34,7 +34,7 @@ spec:
               value: "yes"
             - name: MYSQL_USER
               value: "slurm"
-          image: {{ .Values.sqlImage }}
+          image: {{ .Values.database.image }}
           name: mysql
           ports:
             - containerPort: 3306
