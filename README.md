@@ -1,4 +1,4 @@
-# Slurm Docker Cluster
+# Slurm Kubernetes Cluster
 
 A Helm chart and Dockerfile to run a multi-container Slurm cluster on Kubernetes, featuring:
 
