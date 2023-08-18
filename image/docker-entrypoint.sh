@@ -66,6 +66,9 @@ then
     ulimit -n 131072
     ulimit -a
 
+    # Exposes for https://github.com/stackhpc/bc_containerised_jupyter/tree/v0.1.1
+    echo "POD_NAME=$POD_NAME" >> /etc/environment
+
     start_munge
 
     echo "---> Waiting for slurmctld to become active before starting slurmd..."
@@ -125,7 +128,7 @@ then
     echo "" >> /home/rocky/.ssh/authorized_keys #Adding newline to avoid breaking authorized_keys file
     cat /home/rocky/.ssh/id_rsa.pub >> /home/rocky/.ssh/authorized_keys
 
-    echo "---> Starting Apache Server"
+    echo "---> Setting up Apache Server"
 
     # mkdir --parents /etc/ood/config/apps/shell
     # env > /etc/ood/config/apps/shell/env
@@ -135,6 +138,12 @@ then
     mkdir --parents /opt/rh/httpd24/root/etc/httpd/
 
     /usr/bin/htdbm -cb /opt/rh/httpd24/root/etc/httpd/.htpasswd.dbm rocky $ROCKY_OOD_PASS
+
+    echo "---> Setting up Jupyter App"
+    mkdir --parents /var/www/ood/apps/sys/jupyter
+    git clone $JUPYTER_REPO --branch $JUPYTER_TAG /var/www/ood/apps/sys/jupyter
+
+    echo "---> Starting Apache server"
     /usr/sbin/httpd -k start -X -e debug
 
 elif [ "$1" = "check-queue-hook" ]

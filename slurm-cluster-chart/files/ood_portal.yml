@@ -150,21 +150,21 @@ ssl:
 #     host_regex: '[\w.-]+\.example\.com'
 # Default: '[^/]+' (allow reverse proxying to all hosts, this allows external
 # hosts as well)
-#host_regex: '[^/]+'
+#host_regex: 'slurmd-[0-1]'
 
 # Sub-uri used to reverse proxy to backend web server running on node that
 # knows the full URI path
 # Example:
 #     node_uri: '/node'
 # Default: null (disable this feature)
-#node_uri: null
+node_uri: "/node"
 
 # Sub-uri used to reverse proxy to backend web server running on node that
 # ONLY uses *relative* URI paths
 # Example:
 #     rnode_uri: '/rnode'
 # Default: null (disable this feature)
-#rnode_uri: null
+rnode_uri: "/rnode"
 
 #
 # Per-user NGINX Passenger apps
@@ -240,7 +240,6 @@ ssl:
 # Default: null (display error to user if mapping fails)
 #register_root: null
 
-host_regex: 'head'
 auth:
  - 'AuthType Basic'
  - 'AuthName "private"'

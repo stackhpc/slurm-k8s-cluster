@@ -1,4 +1,4 @@
-slurmImage: ghcr.io/stackhpc/slurm-docker-cluster:d3daba4
+slurmImage: ghcr.io/stackhpc/slurm-docker-cluster:ac8fe57
 
 login:
   # Deployment resource name
@@ -73,6 +73,10 @@ sshPublicKey:
 # Secret resource names
 secrets:
   mungeKey: munge-key-secret
+  
+jupyterApp:
+  repoURL: "https://github.com/stackhpc/bc_containerised_jupyter.git"
+  repoTag: "v0.1.1"
 
 openOnDemand:
   #Password for default Open OnDemand user 'rocky'

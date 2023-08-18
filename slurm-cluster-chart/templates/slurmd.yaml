@@ -35,8 +35,9 @@ spec:
           image: {{ .Values.slurmImage }}
           name: slurmd
           ports:
+            - containerPort: 8888
             - containerPort: 6818
-              hostPort:  6818
+              hostPort: 6818
           resources: {}
           volumeMounts:
             - mountPath: /etc/slurm/

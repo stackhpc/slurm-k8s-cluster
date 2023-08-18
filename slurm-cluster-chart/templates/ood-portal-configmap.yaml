@@ -4,5 +4,5 @@ metadata:
   name: ood-portal-configmap
 data:
   ood_portal.yml: |
-    {{- .Files.Get "files/ood_portal.yaml" | nindent 4 -}}
+    {{- .Files.Get "files/ood_portal.yml" | nindent 4 -}}
     

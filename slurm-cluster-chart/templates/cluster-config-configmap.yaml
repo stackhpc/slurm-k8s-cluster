@@ -3,5 +3,5 @@ kind: ConfigMap
 metadata:
   name: cluster-config
 data:
-  ood-cluster-config.yml: |
-    {{- .Files.Get "files/ood-cluster-config.yml" | nindent 4 -}}
+  slurm-cluster.yml: |
+    {{- .Files.Get "files/slurm-cluster-config.yml" | nindent 4 -}}
