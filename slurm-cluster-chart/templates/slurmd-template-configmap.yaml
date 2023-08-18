@@ -21,6 +21,11 @@ data:
             - -vvvvv
             - -N
             - SLURMD_NODENAME
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
           image: {{ .Values.slurmImage }}
           name: slurmd
           ports:
@@ -30,7 +35,7 @@ data:
           volumeMounts:
             - mountPath: /etc/slurm/
               name: slurm-config-volume
-            - mountPath: {{ .Values.nfs.mountPath }}
+            - mountPath: {{ .Values.storage.mountPath }}
               name: slurm-jobdir
             - mountPath: /tmp/munge.key
               name: munge-key-secret
@@ -41,12 +46,12 @@ data:
       dnsPolicy: ClusterFirstWithHostNet
       dnsConfig:
         searches:
-          - slurmd.default.svc.cluster.local
+          - slurmd.{{ .Release.Namespace }}.svc.cluster.local
       restartPolicy: Always
       volumes:
         - name: slurm-jobdir
           persistentVolumeClaim:
-            claimName: {{ .Values.nfs.claimName }}
+            claimName: {{ .Values.storage.claimName }}
         - name: slurm-config-volume
           configMap:
             name: {{ .Values.configmaps.slurmConf }}

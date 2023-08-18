@@ -1,0 +1,28 @@
+
+# Name for the NFSServer resource created by rook
+serverName: rook-nfs
+
+# Name for the created storage class
+storageClassName: rook-nfs
+
+# Name for the Read-Write-Once backing PVC created by Rook
+claimName: rook-nfs-backing-pv
+
+# Storage class to use for the Read-Write-Once backing PVC
+backingStorageClass:
+
+# Name for the NFS share within the NFS Resource instance
+shareName: share-1
+
+# Size of the Read-Write-Once backing storage volume
+storageCapacity: 10Gi
+
+# Image to use for the Rook NFS operator
+operatorImage: rook/nfs:master
+
+# NOTE: For some reason deploying everything in the default
+# namespace leads to R-W-M PVCs getting stuck in 'pending'
+# state indefinitely, so here we separate out namespaces as
+# of various components in the same way as the Rook docs
+serverNamespace: rook-nfs
+systemNamespace: rook-nfs-system

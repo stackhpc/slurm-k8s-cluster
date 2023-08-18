@@ -1,0 +1,4 @@
+apiVersion: v2
+name: rooknfs
+version: 0.0.1
+description: A packaged installation of Rook NFS for Kubernetes.
