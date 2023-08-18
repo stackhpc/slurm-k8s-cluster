@@ -1,8 +1,7 @@
 # Slurm Docker Cluster
 
-This is a multi-container Slurm cluster using Kubernetes.  The Helm chart
-creates a named volume for persistent storage of MySQL data files as well as
-an NFS volume for shared storage.
+This is a multi-container Slurm cluster using Kubernetes. The Slurm cluster Helm chart creates a named volume for persistent storage of MySQL data files. By default, it also installs the
+RookNFS Helm chart (also in this repo) to provide shared storage across the Slurm cluster nodes.
 
 ## Dependencies
 
@@ -27,12 +26,11 @@ The Helm chart will create the following named volumes:
 
 * var_lib_mysql     ( -> /var/lib/mysql )
 
-A named ReadWriteMany (RWX) volume mounted to `/home` is also expected, this can be external or can be deployed using the scripts in the `/nfs` directory (See "Deploying the Cluster")
+A named ReadWriteMany (RWX) volume mounted to `/home` is also expected, this can be external or can be deployed using the provided `rooknfs` chart directory (See "Deploying the Cluster").
 
 ## Configuring the Cluster
 
-All config files in `slurm-cluster-chart/files` will be mounted into the container to configure their respective services on startup. Note that changes to these files will not all be propagated to existing deployments (see "Reconfiguring the Cluster").
-Additional parameters can be found in the `values.yaml` file, which will be applied on a Helm chart deployment. Note that some of these values will also not propagate until the cluster is restarted (see "Reconfiguring the Cluster").
+All config files in `slurm-cluster-chart/files` will be mounted into the container to configure their respective services on startup. Note that changes to these files will not all be propagated to existing deployments (see "Reconfiguring the Cluster"). Additional parameters can be found in the `values.yaml` file for the Helm chart. Note that some of these values will also not propagate until the cluster is restarted (see "Reconfiguring the Cluster").
 
 ## Deploying the Cluster
 
@@ -40,25 +38,26 @@ Additional parameters can be found in the `values.yaml` file, which will be appl
 
 On initial deployment ONLY, run
 ```console
-./generate-secrets.sh
+./generate-secrets.sh [<target-namespace>]
 ```
-This generates a set of secrets. If these need to be regenerated, see "Reconfiguring the Cluster"
+This generates a set of secrets in the target namespace to be used by the Slurm cluster. If these need to be regenerated, see "Reconfiguring the Cluster"
+
+Be sure to take note of the Open Ondemand credentials, you will need them to access the cluster through a browser
 
 ### Connecting RWX Volume
 
-A ReadWriteMany (RWX) volume is required, if a named volume exists, set `nfs.claimName` in the `values.yaml` file to its name. If not, manifests to deploy a Rook NFS volume are provided in the `/nfs` directory. You can deploy this by running
-```console
-./nfs/deploy-nfs.sh
-```
-and leaving `nfs.claimName` as the provided value.
+A ReadWriteMany (RWX) volume is required for shared storage across cluster nodes. By default, the Rook NFS Helm chart is installed as a dependency of the Slurm cluster chart in order to provide a RWX capable Storage Class for the required shared volume. If the target Kubernetes cluster has an existing storage class which should be used instead, then `storageClass` in `values.yaml` should be set to the name of this existing class and the RookNFS dependency should be disabled by setting `rooknfs.enabled = false`. In either case, the storage capacity of the provisioned RWX volume can be configured by setting the value of `storage.capacity`.
+
+See the separate RookNFS chart [values.yaml](./rooknfs/values.yaml) for further configuration options when using the RookNFS to provide the shared storage volume.
 
 ### Supplying Public Keys
 
 To access the cluster via `ssh`, you will need to make your public keys available. All your public keys from localhost can be added by running
 
 ```console
-./publish-keys.sh
+./publish-keys.sh [<target-namespace>]
 ```
+where `<target-namespace>` is the namespace in which the Slurm cluster chart will be deployed (i.e. using `helm install -n <target-namespace> ...`). This will create a Kubernetes Secret in the appropriate namespace for the Slurm cluster to use. Omitting the namespace arg will install the secrets in the default namespace.
 
 ### Deploying with Helm
 
@@ -66,11 +65,19 @@ After configuring `kubectl` with the appropriate `kubeconfig` file, deploy the c
 ```console
 helm install <deployment-name> slurm-cluster-chart
 ```
+
+NOTE: If using the RookNFS dependency, then the following must be run before installing the Slurm cluster chart
+```console
+helm dependency update slurm-cluster-chart
+```
+
 Subsequent releases can be deployed using:
 
 ```console
 helm upgrade <deployment-name> slurm-cluster-chart
 ```
+
+Note: When updating the cluster with `helm upgrade`, a pre-upgrade hook will prevent upgrades if there are running jobs in the Slurm queue. Attempting to upgrade will set all Slurm nodes to `DRAINED` state. If an upgrade fails due to running jobs, you can undrain the nodes either by waiting for running jobs to complete and then retrying the upgrade or by manually undraining them by accessing the cluster as a privileged user. Alternatively you can bypass the hook by running `helm upgrade` with the `--no-hooks` flag (may result in running jobs being lost)
 
 ## Accessing the Cluster
 
@@ -128,6 +135,7 @@ srun singularity exec docker://ghcr.io/stackhpc/mpitests-container:${MPI_CONTAIN
 ```
 
 Note: The mpirun script assumes you are running as user 'rocky'. If you are running as root, you will need to include the --allow-run-as-root argument
+
 ## Reconfiguring the Cluster
 
 ### Changes to config files
@@ -171,3 +179,5 @@ and then restart the other dependent deployments to propagate changes:
 ```console
 kubectl rollout restart deployment slurmd slurmctld login slurmdbd
 ```
+
+# Known Issues

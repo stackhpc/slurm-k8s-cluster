@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-config
+data:
+  ood-cluster-config.yml: |
+    {{- .Files.Get "files/ood-cluster-config.yml" | nindent 4 -}}

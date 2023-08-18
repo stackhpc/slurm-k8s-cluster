@@ -48,7 +48,7 @@ then
     done
     echo "-- slurmdbd is now active ..."
 
-    echo "---> Setting permissions for state directory ..."
+    echo "---> Setting ownership for state directory ..."
     chown slurm:slurm /var/spool/slurmctld
 
     echo "---> Starting the Slurm Controller Daemon (slurmctld) ..."
@@ -86,6 +86,8 @@ then
     chown root:root /home
     chmod 755 /home
 
+    echo "---> Setting up ssh for user"
+
     mkdir -p /home/rocky/.ssh
     cp /tmp/authorized_keys /home/rocky/.ssh/authorized_keys
 
@@ -99,25 +101,75 @@ then
     done
     popd > /dev/null
 
+    echo "---> Complete"
     echo "---> Starting sshd"
-    ssh-keygen -A
+    cp /tempmounts/etc/ssh/* /etc/ssh/
+    chmod 600 /etc/ssh/ssh_host_dsa_key
+    chmod 600 /etc/ssh/ssh_host_ecdsa_key
+    chmod 600 /etc/ssh/ssh_host_ed25519_key
+    chmod 600 /etc/ssh/ssh_host_rsa_key
     /usr/sbin/sshd
 
-    start_munge --foreground
+    start_munge
+
+    echo "---> Setting up self ssh capabilities for OOD"
+
+    if [ -f /home/rocky/.ssh/id_rsa.pub ]; then
+        echo "ssh keys already found"
+    else
+            ssh-keygen -t rsa -f /home/rocky/.ssh/id_rsa -N ""
+            chown rocky:rocky /home/rocky/.ssh/id_rsa /home/rocky/.ssh/id_rsa.pub
+    fi
+
+    ssh-keyscan localhost > /etc/ssh/ssh_known_hosts
+    echo "" >> /home/rocky/.ssh/authorized_keys #Adding newline to avoid breaking authorized_keys file
+    cat /home/rocky/.ssh/id_rsa.pub >> /home/rocky/.ssh/authorized_keys
+
+    echo "---> Starting Apache Server"
+
+    # mkdir --parents /etc/ood/config/apps/shell
+    # env > /etc/ood/config/apps/shell/env
+
+    /usr/libexec/httpd-ssl-gencerts
+    /opt/ood/ood-portal-generator/sbin/update_ood_portal
+    mkdir --parents /opt/rh/httpd24/root/etc/httpd/
+
+    /usr/bin/htdbm -cb /opt/rh/httpd24/root/etc/httpd/.htpasswd.dbm rocky $ROCKY_OOD_PASS
+    /usr/sbin/httpd -k start -X -e debug
 
 elif [ "$1" = "check-queue-hook" ]
 then
     start_munge
 
+    scontrol update NodeName=all State=DRAIN Reason="Preventing new jobs running before upgrade"
+
     RUNNING_JOBS=$(squeue --states=RUNNING,COMPLETING,CONFIGURING,RESIZING,SIGNALING,STAGE_OUT,STOPPED,SUSPENDED --noheader --array | wc --lines)
 
     if [[ $RUNNING_JOBS -eq 0 ]]
     then
-            exit 0
+        exit 0
     else
-            exit 1
+        exit 1
     fi
 
+elif [ "$1" = "undrain-nodes-hook" ]
+then
+    start_munge
+    scontrol update NodeName=all State=UNDRAIN
+    exit 0
+
+elif [ "$1" = "generate-keys-hook" ]
+then
+    mkdir -p ./temphostkeys/etc/ssh
+    ssh-keygen -A -f ./temphostkeys
+    kubectl create secret generic host-keys-secret \
+    --dry-run=client \
+    --from-file=./temphostkeys/etc/ssh \
+    -o yaml | \
+    kubectl apply -f -
+    
+    exit 0
+    
 elif [ "$1" = "debug" ]
 then
     start_munge --foreground
