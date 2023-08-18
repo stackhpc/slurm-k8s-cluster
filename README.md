@@ -4,7 +4,7 @@ A Helm chart and Dockerfile to run a multi-container Slurm cluster on Kubernetes
 
 * Control, login, slurmd (worker), slurmdbd and mariadb pods.
 * A shared `/home` directory across the slurm pods,  by default via an install of RookNFS to provide a storage class with Read Write Many (RWX) capabilities.
-* SSH and and HTTPS access to the login pod with an Open Ondemand web GUI.
+* SSH and HTTPS access to the login pod with an Open Ondemand web GUI.
 * A single slurmd pod per Kubernetes worker node with automatic definition of slurm node memory and CPU configuration.
 * Slurm jobs run inside the slurmd pods, using host networking for maximum MPI performance.
 * Open MPI installed with support for Slurm's `srun` launcher (via `pmix`) - see example below.
