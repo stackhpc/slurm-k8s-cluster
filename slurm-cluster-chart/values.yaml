@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 slurmImage: ghcr.io/stackhpc/slurm-k8s-cluster:6ca2cd0
+=======
+slurmImage: ghcr.io/stackhpc/slurm-docker-cluster:1f51003
+>>>>>>> main
 
 login:
   # Deployment resource name

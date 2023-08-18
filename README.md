@@ -77,6 +77,8 @@ Subsequent releases can be deployed using:
 helm upgrade <deployment-name> slurm-cluster-chart
 ```
 
+Note: When updating the cluster with `helm upgrade`, a pre-upgrade hook will prevent upgrades if there are running jobs in the Slurm queue. Attempting to upgrade will set all Slurm nodes to `DRAINED` state. If an upgrade fails due to running jobs, you can undrain the nodes either by waiting for running jobs to complete and then retrying the upgrade or by manually undraining them by accessing the cluster as a privileged user. Alternatively you can bypass the hook by running `helm upgrade` with the `--no-hooks` flag (may result in running jobs being lost)
+
 ## Accessing the Cluster
 
 Retrieve the external IP address of the login node using:
