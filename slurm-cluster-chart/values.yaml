@@ -1,4 +1,4 @@
-slurmImage: ghcr.io/stackhpc/slurm-docker-cluster:d3daba4 #OUTDATED, DON'T USE!
+slurmImage: ghcr.io/stackhpc/slurm-k8s-cluster:6ca2cd0
 
 login:
   # Deployment resource name
