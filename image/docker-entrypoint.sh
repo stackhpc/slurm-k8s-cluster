@@ -141,14 +141,22 @@ elif [ "$1" = "check-queue-hook" ]
 then
     start_munge
 
+    scontrol update NodeName=all State=DRAIN Reason="Preventing new jobs running before upgrade"
+
     RUNNING_JOBS=$(squeue --states=RUNNING,COMPLETING,CONFIGURING,RESIZING,SIGNALING,STAGE_OUT,STOPPED,SUSPENDED --noheader --array | wc --lines)
 
     if [[ $RUNNING_JOBS -eq 0 ]]
     then
-            exit 0
+        exit 0
     else
-            exit 1
+        exit 1
     fi
+
+elif [ "$1" = "undrain-nodes-hook" ]
+then
+    start_munge
+    scontrol update NodeName=all State=UNDRAIN
+    exit 0
 
 elif [ "$1" = "generate-keys-hook" ]
 then
