@@ -1,4 +1,4 @@
-sdcImage: ghcr.io/stackhpc/slurm-docker-cluster:c0b2f69 #OUTDATED, DON'T USE THIS COMMIT!
+slurmImage: ghcr.io/stackhpc/slurm-docker-cluster:6a1af7b
 
 login:
   # Deployment resource name
@@ -73,14 +73,11 @@ sshPublicKey:
 # Secret resource names
 secrets:
   mungeKey: munge-key-secret
-<<<<<<< HEAD
   
 jupyterApp:
   repoURL: "https://github.com/stackhpc/OOD-containerised-jupyter.git"
   repoTag: "v0.1"
-=======
 
 openOnDemand:
   #Password for default Open OnDemand user 'rocky'
   password: password
->>>>>>> main
