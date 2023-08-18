@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/name: slurm
+    app.kubernetes.io/component: login
+  name: {{ .Values.login.name }}
+spec:
+  replicas: {{ .Values.login.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: slurm
+      app.kubernetes.io/component: login
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/name: slurm
+        app.kubernetes.io/component: login
+    spec:
+      containers:
+        - args:
+            - login
+          image: {{ .Values.slurmImage }}
+          name: login
+          env:
+            - name: ROCKY_OOD_PASS
+              value: {{ .Values.openOnDemand.password }}
+          ports:
+            - containerPort: 22
+            - containerPort: 80
+            - containerPort: 443
+          volumeMounts:
+            - mountPath: {{ .Values.storage.mountPath }}
+              name: slurm-jobdir
+            - mountPath: /etc/slurm/
+              name: slurm-config-volume
+            - mountPath: /tmp/munge.key
+              name: munge-key-secret
+              subPath: munge.key
+            - mountPath: /etc/ssh/sshd_config
+              subPath: sshd_config
+              name: sshd-config-configmap
+            - name: authorized-keys
+              mountPath: /tmp/authorized_keys
+              subPath: authorized_keys
+            - name: ood-portal
+              mountPath: /etc/ood/config/ood_portal.yml
+              subPath: ood_portal.yml
+            - name: httpd-config
+              mountPath: /etc/httpd/conf/httpd.conf
+              subPath: httpd.conf
+            - name: cluster-config
+              mountPath: /etc/ood/config/clusters.d/ood-cluster-config.yml
+              subPath: ood-cluster-config.yml
+            - name: host-keys
+              mountPath: /tempmounts/etc/ssh
+          resources: {}
+      hostname: login
+      dnsConfig:
+        searches:
+          - slurmd.{{ .Release.Namespace }}.svc.cluster.local
+      restartPolicy: Always
+      volumes:
+        - name: slurm-jobdir
+          persistentVolumeClaim:
+            claimName: {{ .Values.storage.claimName }}
+        - name: slurm-config-volume
+          configMap:
+            name: {{ .Values.configmaps.slurmConf }}
+        - name: sshd-config-configmap
+          configMap:
+            name: {{ .Values.configmaps.sshdConfig }}
+        - name: munge-key-secret
+          secret:
+            secretName: {{ .Values.secrets.mungeKey }}
+            defaultMode: 0400
+        - name: authorized-keys
+          configMap:
+            {{ if .Values.sshPublicKey }}
+            name: helm-authorized-keys-configmap
+            {{ else }}
+            name: authorized-keys-configmap
+            {{ end }}
+        - name: cluster-config
+          configMap:
+            name: cluster-config
+        - name: ood-portal
+          configMap:
+            name: ood-portal-configmap
+        - name: httpd-config
+          configMap:
+            name: httpd-configmap
+        - name: host-keys
+          secret:
+            secretName: host-keys-secret
