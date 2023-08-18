@@ -1,0 +1,9 @@
+#Only applied if sshPublicKey provided in values.yaml, if not assumes you have run publish-keys.sh prior to helm release
+{{ if .Values.sshPublicKey }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: helm-authorized-keys-configmap
+data:
+  authorized_keys: {{ .Values.sshPublicKey }}
+{{ end }}

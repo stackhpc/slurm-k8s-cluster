@@ -8,7 +8,7 @@ metadata:
   name: slurmd
 spec:
   ports:
-    - name: "6818"
+    - name: slurmd
       port: 6818
       targetPort: 6818
     - name: "jupyter"

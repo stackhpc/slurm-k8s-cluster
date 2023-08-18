@@ -8,7 +8,7 @@ metadata:
   name: slurmctld-0
 spec:
   ports:
-    - name: "6817"
+    - name: slurmctld
       port: 6817
       targetPort: 6817
   selector:

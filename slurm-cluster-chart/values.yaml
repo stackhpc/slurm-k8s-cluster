@@ -1,27 +1,83 @@
-sdcImage: ghcr.io/stackhpc/slurm-docker-cluster:c0b2f69
+slurmImage: ghcr.io/stackhpc/slurm-docker-cluster:ac8fe57
 
-replicas:
-  slurmd: 2
-  login: 1
+login:
+  # Deployment resource name
+  name: login
+  replicas: 1
 
-nfs:
+slurmd:
+  # StatefulSet resource name
+  name: slurmd # NB this must match NodeName= in slurm-cluster-chart/files/slurm.conf
+  replicas: 2
+
+slurmctld:
+  # StatefulSet resource name
+  name: slurmctld
+  # NOTE: We don't include a replicas field here because
+  # replicas > 1 for slurmctld needs extra Slurm config
+
+storage:
   mountPath: /home
-  claimName: rook-nfs-pv-claim
+  # The name of a Read-Write-Many StorageClass to use for
+  # the persistent volume which is shared across Slurm nodes
+  # Note: If using the default value then you must set
+  # rooknfs.enabled = true below to ensure that Rook NFS is 
+  # installed on the cluster as a dependency of this Slurm
+  # chart. If you are using a separate RWM StorageClass, then
+  # set rooknfs.enabled = false
+  storageClassName: slurm-rook-nfs
+  # Name for the R-W-M volume to provision
+  claimName: slurm-shared-storage
+  # Capacite of the R-W-M volume
+  capacity: &capacity 10Gi   # NB yaml anchor used so this value is also set for `rooknfs.storageCapacity` if necessary.
 
-sqlImage: mariadb:10.10
 
-databaseStorage: 100Mi
+# Values to be passed to the rook-nfs sub-chart
+# See rook-nfs sub-chart for full set of available config values
+rooknfs:
+  enabled: true
+  # Name given to the RWM StorageClass created by Rook
+  # NB this must match storage.storageClassName when using Rook
+  storageClassName: slurm-rook-nfs
+  # Name for the NFSServer resource created by Rook
+  serverName: rook-nfs
+  # Capacity for the backing Read-Write-*Once* volume 
+  # than Rook will create to provide the actual storage to 
+  # the NFS server. Since we're using the Rook NFS in a 
+  # slightly unconventional way here, we just want to anchor
+  # this value to the requested storage capacity for the RWM
+  # volume specified in storage.capacity
+  storageCapacity: *capacity
+  # Storage class to use for the Read-Write-Once backing PVC
+  # backingStorageClass: 
 
+
+
+# Values for Slurm's database container
+database:
+  #Database image to be used
+  image: mariadb:10.10
+  #Storage requested by the var-lib-mysql volume backing the database
+  storage: 100Mi
+
+# Configmap resource names
 configmaps:
-  authorizedKeys: authorized-keys-configmap
   slurmConf: slurm-conf-configmap
   slurmdbdConf: slurmdbd-conf-configmap
   sshdConfig: sshd-config-configmap
 
+# Public key used for ssh access to the login node
+# If let undefined, assumes you have run the provided publish-keys.sh script to publish your public key prior to deployment
+sshPublicKey:
+
+# Secret resource names
 secrets:
-  databaseAuth: database-auth-secret
   mungeKey: munge-key-secret
   
 jupyterApp:
-  repoURL: "https://github.com/stackhpc/OOD-containerised-jupyter.git"
-  repoTag: "v0.1"
+  repoURL: "https://github.com/stackhpc/bc_containerised_jupyter.git"
+  repoTag: "v0.1.1"
+
+openOnDemand:
+  #Password for default Open OnDemand user 'rocky'
+  password: password

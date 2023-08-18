@@ -1,3 +1,4 @@
+# Modified from file installed by ondemand package
 ---
 #
 # Portal configuration
@@ -149,7 +150,7 @@ ssl:
 #     host_regex: '[\w.-]+\.example\.com'
 # Default: '[^/]+' (allow reverse proxying to all hosts, this allows external
 # hosts as well)
-host_regex: 'slurmd-[0-1]'
+#host_regex: 'slurmd-[0-1]'
 
 # Sub-uri used to reverse proxy to backend web server running on node that
 # knows the full URI path
