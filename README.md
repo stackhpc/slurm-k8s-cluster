@@ -1,7 +1,16 @@
 # Slurm Docker Cluster
 
-This is a multi-container Slurm cluster using Kubernetes. The Slurm cluster Helm chart creates a named volume for persistent storage of MySQL data files. By default, it also installs the
-RookNFS Helm chart (also in this repo) to provide shared storage across the Slurm cluster nodes.
+A Helm chart and Dockerfile to run a multi-container Slurm cluster on Kubernetes, featuring:
+
+* Control, login, slurmd (worker), slurmdbd and mariadb pods.
+* A shared `/home` directory across the slurm pods,  by default via an install of RookNFS to provide a storage class with Read Write Many (RWX) capabilities.
+* SSH and and HTTPS access to the login pod with an Open Ondemand web GUI.
+* A single slurmd pod per Kubernetes worker node with automatic definition of slurm node memory and CPU configuration.
+* Slurm jobs run inside the slurmd pods, using host networking for maximum MPI performance.
+* Open MPI installed with support for Slurm's `srun` launcher (via `pmix`) - see example below.
+* Support for containerised jobs via Apptainer - see example below.
+* Job accounting information retained across container upgrades via a persistent volume claim.
+* Credentials/secrets are generated during the Helm install, not embedded in images.
 
 ## Dependencies
 
@@ -178,4 +187,10 @@ and then restart the other dependent deployments to propagate changes:
 kubectl rollout restart deployment slurmd slurmctld login slurmdbd
 ```
 
-# Known Issues
+# Limitations and Known Issues
+- Only a single cluster should be deployed per Kubernetes namespace.
+- Only the `rocky` user is currently supported.
+
+# Acknowlegements
+
+Originally based on https://github.com/giovtorres/slurm-docker-cluster which defines a docker-compose -based cluster.
