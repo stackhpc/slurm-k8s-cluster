@@ -36,7 +36,7 @@ spec:
           name: slurmd
           ports:
             - containerPort: 6818
-              hostPort:  6818
+              hostPort:  6818 # used to ensure only a single pod per k8s node
           resources: {}
           volumeMounts:
             - mountPath: /etc/slurm/
