@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shell-app-configmap
+data:
+  app.js: |
+    {{- .Files.Get "files/app.js" | nindent 4 -}}
