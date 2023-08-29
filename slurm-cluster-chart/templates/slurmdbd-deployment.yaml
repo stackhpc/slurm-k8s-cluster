@@ -44,7 +44,11 @@ spec:
             - name: StoragePass
               valueFrom:
                 secretKeyRef:
+                  {{ if .Values.database.passwordSecretName }}
+                  name: {{ .Values.database.passwordSecretName }}
+                  {{ else }}
                   name: database-auth-secret
+                  {{ end }}
                   key: password
       hostname: slurmdbd
       restartPolicy: Always
