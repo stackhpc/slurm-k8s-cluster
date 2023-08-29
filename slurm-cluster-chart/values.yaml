@@ -72,8 +72,9 @@ databaseConnection:
   # If using the internal database, changing this field will have no effect
   # If using the external database, this user must exist on it
   user: slurm
-  # Password for database user. If left as nil, one will be randomly generated (recommended for internal database)
-  password:
+  # Name of secret containing database password. Secret should contain a 'password' key. If left as nil, a secret will be created
+  # automatically with a randomly generated password (recommended for internal database)
+  passwordSecretName:
 
 # Configmap resource names
 configmaps:

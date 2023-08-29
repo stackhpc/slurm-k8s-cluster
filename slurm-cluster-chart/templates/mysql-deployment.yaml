@@ -30,7 +30,11 @@ spec:
             - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
+                  {{ if .Values.database.passwordSecretName }}
+                  name: {{ .Values.database.passwordSecretName }}
+                  {{ else }}
                   name: database-auth-secret
+                  {{ end }}
                   key: password
             - name: MYSQL_RANDOM_ROOT_PASSWORD
               value: "yes"
