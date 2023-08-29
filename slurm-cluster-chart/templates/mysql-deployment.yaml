@@ -1,3 +1,5 @@
+{{ if .Values.database.enabled }}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -33,7 +35,7 @@ spec:
             - name: MYSQL_RANDOM_ROOT_PASSWORD
               value: "yes"
             - name: MYSQL_USER
-              value: "slurm"
+              value: {{ .Values.databaseConnection.user }}
           image: {{ .Values.database.image }}
           name: mysql
           ports:
@@ -48,3 +50,5 @@ spec:
         - name: var-lib-mysql
           persistentVolumeClaim:
             claimName: var-lib-mysql
+
+{{ end }}

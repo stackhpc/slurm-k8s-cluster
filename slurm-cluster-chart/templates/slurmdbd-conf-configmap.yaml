@@ -22,6 +22,6 @@ data:
     #
     # Database info
     StorageType=accounting_storage/mysql
-    StorageHost=mysql
-    StorageUser=slurm
+    StorageHost={{ .Values.databaseConnection.hostname }}
+    StorageUser={{ .Values.databaseConnection.user }}
     
