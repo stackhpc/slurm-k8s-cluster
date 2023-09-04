@@ -43,16 +43,6 @@ All config files in `slurm-cluster-chart/files` will be mounted into the contain
 
 ## Deploying the Cluster
 
-### Generating Cluster Secrets
-
-On initial deployment ONLY, run
-```console
-./generate-secrets.sh [<target-namespace>]
-```
-This generates a set of secrets in the target namespace to be used by the Slurm cluster. If these need to be regenerated, see "Reconfiguring the Cluster"
-
-Be sure to take note of the Open Ondemand credentials, you will need them to access the cluster through a browser
-
 ### Connecting RWX Volume
 
 A ReadWriteMany (RWX) volume is required for shared storage across cluster nodes. By default, the Rook NFS Helm chart is installed as a dependency of the Slurm cluster chart in order to provide a RWX capable Storage Class for the required shared volume. If the target Kubernetes cluster has an existing storage class which should be used instead, then `storageClass` in `values.yaml` should be set to the name of this existing class and the RookNFS dependency should be disabled by setting `rooknfs.enabled = false`. In either case, the storage capacity of the provisioned RWX volume can be configured by setting the value of `storage.capacity`.
@@ -172,10 +162,6 @@ Generally restarts to `slurmd`, `slurmctld`, `login` and `slurmdbd` will be requ
 
 ### Changes to secrets
 
-Regenerate secrets by rerunning
-```console
-./generate-secrets.sh
-```
 Some secrets are persisted in volumes, so cycling them requires a full teardown and reboot of the volumes and pods which these volumes are mounted on. Run
 ```console
 kubectl delete deployment mysql
