@@ -1,7 +1,16 @@
-# Slurm Docker Cluster
+# Slurm Kubernetes Cluster
 
-This is a multi-container Slurm cluster using Kubernetes. The Slurm cluster Helm chart creates a named volume for persistent storage of MySQL data files. By default, it also installs the
-RookNFS Helm chart (also in this repo) to provide shared storage across the Slurm cluster nodes.
+A Helm chart and Dockerfile to run a multi-container Slurm cluster on Kubernetes, featuring:
+
+* Control, login, slurmd (worker), slurmdbd and mariadb pods.
+* A shared `/home` directory across the slurm pods, by default via an install of RookNFS to provide a storage class with Read Write Many (RWX) capabilities.
+* SSH and HTTPS access to the login pod with an Open Ondemand web GUI.
+* A single slurmd pod per Kubernetes worker node with automatic definition of slurm node memory and CPU configuration.
+* Slurm jobs run inside the slurmd pods, using host networking for maximum MPI performance.
+* Open MPI installed with support for Slurm's `srun` launcher (via `pmix`) - see example below.
+* Support for containerised jobs via Apptainer - see example below.
+* Job accounting information retained across container upgrades via a persistent volume claim.
+* Credentials/secrets are generated during the Helm install, not embedded in images.
 
 ## Dependencies
 
@@ -33,16 +42,6 @@ A named ReadWriteMany (RWX) volume mounted to `/home` is also expected, this can
 All config files in `slurm-cluster-chart/files` will be mounted into the container to configure their respective services on startup. Note that changes to these files will not all be propagated to existing deployments (see "Reconfiguring the Cluster"). Additional parameters can be found in the `values.yaml` file for the Helm chart. Note that some of these values will also not propagate until the cluster is restarted (see "Reconfiguring the Cluster").
 
 ## Deploying the Cluster
-
-### Generating Cluster Secrets
-
-On initial deployment ONLY, run
-```console
-./generate-secrets.sh [<target-namespace>]
-```
-This generates a set of secrets in the target namespace to be used by the Slurm cluster. If these need to be regenerated, see "Reconfiguring the Cluster"
-
-Be sure to take note of the Open Ondemand credentials, you will need them to access the cluster through a browser
 
 ### Connecting RWX Volume
 
@@ -165,10 +164,6 @@ Generally restarts to `slurmd`, `slurmctld`, `login` and `slurmdbd` will be requ
 
 ### Changes to secrets
 
-Regenerate secrets by rerunning
-```console
-./generate-secrets.sh
-```
 Some secrets are persisted in volumes, so cycling them requires a full teardown and reboot of the volumes and pods which these volumes are mounted on. Run
 ```console
 kubectl delete deployment mysql
@@ -180,4 +175,10 @@ and then restart the other dependent deployments to propagate changes:
 kubectl rollout restart deployment slurmd slurmctld login slurmdbd
 ```
 
-# Known Issues
+# Limitations and Known Issues
+- Only a single cluster should be deployed per Kubernetes namespace.
+- Only the `rocky` user is currently supported.
+
+# Acknowlegements
+
+Originally based on https://github.com/giovtorres/slurm-docker-cluster which defines a docker-compose -based cluster.
