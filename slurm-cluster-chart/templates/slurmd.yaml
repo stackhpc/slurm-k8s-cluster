@@ -23,7 +23,7 @@ spec:
       containers:
         - args:
             - slurmd
-            - -F
+            - -Z
             - -vvv
             - -N
             - "$(POD_NAME)"
