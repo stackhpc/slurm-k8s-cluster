@@ -177,4 +177,7 @@ helm upgrade <deployment-name> slurm-cluster-chart
 
 A pre-upgrade hook will prevent upgrades if there are running jobs in the Slurm queue. Attempting to upgrade will set all Slurm nodes to `DRAINED` state. If an upgrade fails due to running jobs, you can undrain the nodes either by waiting for running jobs to complete and then retrying the upgrade or by manually undraining them by accessing the cluster as a privileged user. Alternatively you can bypass the hook by running `helm upgrade` with the `--no-hooks` flag (may result in running jobs being lost)
 
-# Known Issues
+# Known Issues and Limitations
+- Single user (`rocky`)
+- All nodes are in a single partition `all`.
+- Scaling down the `slurmd` StatefulSet will not remove nodes from Slurm - they will eventually get marked DOWN. However they will go back to IDLE if the StatefulSet is scaled back up.
