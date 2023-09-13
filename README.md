@@ -34,50 +34,38 @@ All config files in `slurm-cluster-chart/files` will be mounted into the contain
 
 ## Deploying the Cluster
 
-### Generating Cluster Secrets
+### Storage
 
-On initial deployment ONLY, run
-```console
-./generate-secrets.sh [<target-namespace>]
-```
-This generates a set of secrets in the target namespace to be used by the Slurm cluster. If these need to be regenerated, see "Reconfiguring the Cluster"
-
-Be sure to take note of the Open Ondemand credentials, you will need them to access the cluster through a browser
-
-### Connecting RWX Volume
-
-A ReadWriteMany (RWX) volume is required for shared storage across cluster nodes. By default, the Rook NFS Helm chart is installed as a dependency of the Slurm cluster chart in order to provide a RWX capable Storage Class for the required shared volume. If the target Kubernetes cluster has an existing storage class which should be used instead, then `storageClass` in `values.yaml` should be set to the name of this existing class and the RookNFS dependency should be disabled by setting `rooknfs.enabled = false`. In either case, the storage capacity of the provisioned RWX volume can be configured by setting the value of `storage.capacity`.
+A ReadWriteMany (RWX) volume is required to provision a shared volume across the Slurm pods. By default, a RookNFS Helm chart is installed as a dependency of the Slurm cluster chart in order to provide this capability. If the target Kubernetes cluster has an existing storage class which should be used instead, then `storageClass` in `values.yaml` should be set to the name of this existing class and the RookNFS dependency should be disabled by setting `rooknfs.enabled = false`. In either case, the storage capacity of the provisioned RWX volume can be configured by setting the value of `storage.capacity`.
 
 See the separate RookNFS chart [values.yaml](./rooknfs/values.yaml) for further configuration options when using the RookNFS to provide the shared storage volume.
 
-### Supplying Public Keys
+### Public Keys
 
 To access the cluster via `ssh`, you will need to make your public keys available. All your public keys from localhost can be added by running
 
 ```console
 ./publish-keys.sh [<target-namespace>]
 ```
-where `<target-namespace>` is the namespace in which the Slurm cluster chart will be deployed (i.e. using `helm install -n <target-namespace> ...`). This will create a Kubernetes Secret in the appropriate namespace for the Slurm cluster to use. Omitting the namespace arg will install the secrets in the default namespace.
+where `<target-namespace>` is the namespace in which the Slurm cluster chart will be deployed. This will create a Kubernetes Secret in the appropriate namespace for the Slurm cluster to use. Omitting the namespace arg will install the secrets in the default namespace.
 
-### Deploying with Helm
+Alternatively public keys can be defined in `slurm-cluster-chart/values.yaml:sshPublicKey`
 
-After configuring `kubectl` with the appropriate `kubeconfig` file, deploy the cluster using the Helm chart:
-```console
-helm install <deployment-name> slurm-cluster-chart
-```
+### Installation with Helm
 
-NOTE: If using the RookNFS dependency, then the following must be run before installing the Slurm cluster chart
-```console
-helm dependency update slurm-cluster-chart
-```
+- Configure `kubectl` with the appropriate `kubeconfig` file.
 
-Subsequent releases can be deployed using:
+- If necessary, change any configuration in `slurm-cluster-chart/values.yaml`, e.g. `openOnDemand.password`.
 
-```console
-helm upgrade <deployment-name> slurm-cluster-chart
-```
+- If using the RookNFS dependency, then the following must be run before installing the Slurm cluster chart
+  ```console
+  helm dependency update slurm-cluster-chart
+  ```
 
-Note: When updating the cluster with `helm upgrade`, a pre-upgrade hook will prevent upgrades if there are running jobs in the Slurm queue. Attempting to upgrade will set all Slurm nodes to `DRAINED` state. If an upgrade fails due to running jobs, you can undrain the nodes either by waiting for running jobs to complete and then retrying the upgrade or by manually undraining them by accessing the cluster as a privileged user. Alternatively you can bypass the hook by running `helm upgrade` with the `--no-hooks` flag (may result in running jobs being lost)
+- Deploy the cluster using the Helm chart:
+  ```console
+  helm install <deployment-name> slurm-cluster-chart
+  ```
 
 ## Accessing the Cluster
 
@@ -180,4 +168,16 @@ and then restart the other dependent deployments to propagate changes:
 kubectl rollout restart deployment slurmd slurmctld login slurmdbd
 ```
 
-# Known Issues
+## Upgrading the Cluster
+
+Subsequent Helm releases can be deployed using
+```console
+helm upgrade <deployment-name> slurm-cluster-chart
+```
+
+A pre-upgrade hook will prevent upgrades if there are running jobs in the Slurm queue. Attempting to upgrade will set all Slurm nodes to `DRAINED` state. If an upgrade fails due to running jobs, you can undrain the nodes either by waiting for running jobs to complete and then retrying the upgrade or by manually undraining them by accessing the cluster as a privileged user. Alternatively you can bypass the hook by running `helm upgrade` with the `--no-hooks` flag (may result in running jobs being lost)
+
+# Known Issues and Limitations
+- Single user (`rocky`)
+- All nodes are in a single partition `all`.
+- Scaling down the `slurmd` StatefulSet will not remove nodes from Slurm - they will eventually get marked DOWN. However they will go back to IDLE if the StatefulSet is scaled back up.
